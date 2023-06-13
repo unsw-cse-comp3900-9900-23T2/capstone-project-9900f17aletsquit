@@ -1,2 +1,5 @@
 7/6/2023：
 project proposal
+
+week3:
+Complete the peject proposal, write the user story and upload it to jira synchronously, the technology used in the front-end design.
