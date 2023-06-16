@@ -1,0 +1,4 @@
+Date: 12/06/2023
+Task:
+  Finish the group project proposal, write the problem statement, existing systems, project objectives(PO) and novel function parts.
+  Besides, the Jira Sprints and the screenshot of it should be done.
