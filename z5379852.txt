@@ -1,1 +1,12 @@
+Week 1
 
+We set up the group and discussed briefly the project topic. As a backend developer, I started to learn Java framework.
+
+Week 2
+
+We had a meeting about the project start-up and the technologies we want to apply for the project. Start to learn springboot.
+
+Week 3
+
+We had several meetings to sort out the detail in the proposal and finished the proposal. 
+Discussed the relevant structure of the database with my companions, and decided the main content of the table in mysql.
