@@ -1,0 +1,11 @@
+Week 1
+
+We set up the group and discussed briefly the project topic. As a front-end developer in the group, I searched for other car space renting websites and got inspiration for the UI design.
+
+Week 2
+
+We had a meeting about the project start-up and the technologies we want to apply for the project. I looked up and learned something about React and JavaScript.
+
+Week 3
+
+We had several meetings to sort out the detail in the proposal and finished the proposal. I did the website interface prototyping and flow diagram.
