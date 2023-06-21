@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="dataSourceStorageLocal">
-    <data-source name="car_space_renting_database@localhost" uuid="71c8e1fb-36d8-4945-9151-a81917c261df">
-      <database-info product="MySQL" version="5.7.28-log" jdbc-version="4.2" driver-name="MySQL Connector/J" driver-version="mysql-connector-java-8.0.21 (Revision: 33f65445a1bcc544eb0120491926484da168f199)" dbms="MYSQL" exact-version="5.7.28" exact-driver-version="8.0">
+  <component name="dataSourceStorageLocal" created-in="IU-231.9011.34">
+    <data-source name="car_space_renting_database@localhost" uuid="30e55837-8b03-443f-a882-25385bb073a9">
+      <database-info product="MySQL" version="8.0.33" jdbc-version="4.2" driver-name="MySQL Connector/J" driver-version="mysql-connector-java-8.0.25 (Revision: 08be9e9b4cba6aa115f9b27b215887af40b159e0)" dbms="MYSQL" exact-version="8.0.33" exact-driver-version="8.0">
         <extra-name-characters>#@</extra-name-characters>
         <identifier-quote-string>`</identifier-quote-string>
       </database-info>
       <case-sensitivity plain-identifiers="lower" quoted-identifiers="lower" />
       <secret-storage>master_key</secret-storage>
-      <user-name>letsquit</user-name>
+      <user-name>root</user-name>
       <schema-mapping>
         <introspection-scope>
           <node kind="schema" qname="@" />
