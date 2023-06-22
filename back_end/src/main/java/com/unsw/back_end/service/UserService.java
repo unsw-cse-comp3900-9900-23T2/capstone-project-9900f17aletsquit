@@ -7,7 +7,7 @@ public interface UserService {
 
     public int register(User user);
 
-    public void logout(int userId);
+    public int logout(int userId);
 
     public User sendProfile(int token);
 

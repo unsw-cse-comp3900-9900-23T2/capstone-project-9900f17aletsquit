@@ -18,6 +18,9 @@ public class UserServiceImp implements UserService {
             return null;
         }
         if(password.equals(user.getUPassword())){
+            if(user.getCurStatus()){
+                return null;
+            }
             user.setCurStatus(true);
             userMapper.updateByPrimaryKeySelective(user);
             return user;
@@ -41,10 +44,13 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public void logout(int userId) {
+    public int logout(int userId) {
         User user = userMapper.selectByPrimaryKey(userId);
+        if(!user.getCurStatus()){
+            return 0;
+        }
         user.setCurStatus(false);
-        userMapper.updateByPrimaryKeySelective(user);
+        return userMapper.updateByPrimaryKeySelective(user);
     }
 
 
