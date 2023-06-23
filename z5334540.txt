@@ -3,3 +3,6 @@ project proposal
 
 week3:
 Complete the peject proposal, write the user story and upload it to jira synchronously, the technology used in the front-end design.
+
+week4:
+doing the front-end programing with Chenxuan. The initial page already exists, done most of the initial page jump, but it does not interact with the backend yet. Next week we will interact with the backend and start to plan some functions that need to be implemented by the front end.
