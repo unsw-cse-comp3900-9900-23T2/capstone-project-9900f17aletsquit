@@ -21,11 +21,5 @@ class BackEndApplicationTests {
     private OrderMapper orderMapper;
 
 
-    @Test
-    void contextLoads() {
-
-        User user = userMapper.selectByPrimaryKey(1);
-        System.out.println(user);
-    }
 
 }

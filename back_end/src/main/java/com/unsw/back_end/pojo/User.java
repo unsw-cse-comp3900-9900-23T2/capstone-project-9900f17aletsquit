@@ -27,5 +27,7 @@ public class User implements Serializable {
      */
     private Boolean curStatus;
 
+    private String userimage;
+
     private static final long serialVersionUID = 1L;
 }

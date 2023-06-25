@@ -3,6 +3,10 @@ package com.unsw.back_end.service;
 import com.unsw.back_end.mapper.UserMapper;
 import com.unsw.back_end.pojo.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -12,6 +16,7 @@ public class UserServiceImp implements UserService {
     private UserMapper userMapper;
 
     @Override
+    @CachePut(value = "UserCache", key = "#result.userId",condition = "#result!=null")
     public User login(String username, String password) {
         User user = userMapper.selectByUsername(username);
         if(user==null){
@@ -19,55 +24,60 @@ public class UserServiceImp implements UserService {
         }
         if(password.equals(user.getUPassword())){
             if(user.getCurStatus()){
-                return null;
+                user.setUserId(0);
+                return user;
             }
             user.setCurStatus(true);
             userMapper.updateByPrimaryKeySelective(user);
             return user;
         }
         return null;
-
     }
 
+
     @Override
-    public int register(User user) {
+    @CachePut(value = "UserCache", key = "#user.userId",condition = "#result!=null")
+    public User register(User user) {
         User user1 = userMapper.selectByUsername(user.getUsername());
         User user2 = userMapper.selectByEmail(user.getEmail());
         if(user1== null && user2 == null){
             int insert = userMapper.insertSelective(user);
-            System.out.println("insert=========="+insert);
-            return insert;
-        }else{
-            return 0;
+            User result = userMapper.selectByPrimaryKey(user.getUserId());
+            return result;
         }
-
+        return null;
     }
 
     @Override
-    public int logout(int userId) {
+    @CachePut(value = "UserCache", key = "#userId",condition = "#result!=null")
+    public User logout(int userId) {
         User user = userMapper.selectByPrimaryKey(userId);
         if(!user.getCurStatus()){
-            return 0;
+            return null;
         }
         user.setCurStatus(false);
-        return userMapper.updateByPrimaryKeySelective(user);
+        userMapper.updateByPrimaryKeySelective(user);
+        return user;
     }
 
 
     @Override
+    @Cacheable(value = "UserCache", key = "#token")
     public User sendProfile(int token) {
         User user = userMapper.selectByPrimaryKey(token);
         return user;
     }
 
     @Override
-    public int editProfile(User user) {
+    @CachePut(value = "UserCache", key = "#user.userId",condition = "#result!=null")
+    public User editProfile(User user) {
         User user1 = userMapper.selectByUsername(user.getUsername());
         User user2 = userMapper.selectByEmail(user.getEmail());
         if(user1== null && user2 == null){
-            return userMapper.updateByPrimaryKeySelective(user);
+            userMapper.updateByPrimaryKeySelective(user);
+            return userMapper.selectByPrimaryKey(user.getUserId());
         }else{
-            return 0;
+            return null;
         }
     }
 

@@ -20,13 +20,17 @@ public class UserController {
     public ResponseEntity<?> login(@RequestBody User user){
         String username = user.getUsername();
         String uPassword = user.getUPassword();
-        System.out.println("controller======="+uPassword);
+
         User user1= userService.login(username, uPassword);
+
         if(user1 == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Login failed");
         }else{
-            String token = user.getUserId()+"";
-            return ResponseEntity.ok().header("Authorization",token).body("Login success and token sent successfully");
+            if(user1.getUserId()==0){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("You have already login");
+            }
+            String token = user1.getUserId()+"";
+            return ResponseEntity.ok().header("token",token).body("Login success and token sent successfully");
         }
     }
 
@@ -39,19 +43,17 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Login failed");
         }else{
             String token = user.getUserId()+"";
-            return ResponseEntity.ok().header("admin",token).body("Login success admin");
+            return ResponseEntity.ok().header("token",token).body("Login success admin");
         }
     }
 
 
-
-
-
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User user){
+
+        User register = userService.register(user);
         System.out.println("controller = "+user);
-        int register = userService.register(user);
-        if(register!=0){
+        if(register!=null){
             return ResponseEntity.ok("User created successfully");
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("register failed");
@@ -60,8 +62,8 @@ public class UserController {
     @PutMapping("/logout")
     public ResponseEntity<?> logout(@RequestHeader("token") String headerValue){
 
-        int logout = userService.logout(Integer.parseInt(headerValue));
-        if(logout>0){
+        User logout = userService.logout(Integer.parseInt(headerValue));
+        if(logout!=null){
             return ResponseEntity.ok("logout successfully");
         }else{
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("you have already logged out");
@@ -70,10 +72,10 @@ public class UserController {
     }
 
     @PutMapping("/logoutAdmin")
-    public ResponseEntity<?> logoutAdmin(@RequestHeader("admin") String headerValue){
+    public ResponseEntity<?> logoutAdmin(@RequestHeader("token") String headerValue){
 
-        int logout = userService.logout(Integer.parseInt(headerValue));
-        if(logout>0){
+        User logout = userService.logout(Integer.parseInt(headerValue));
+        if(logout!=null){
             return ResponseEntity.ok("logout successfully");
         }else{
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("you have already logged out");
@@ -91,8 +93,8 @@ public class UserController {
     public ResponseEntity<?> editProfile(@RequestHeader("token") String headerValue, @RequestBody User user){
         int i = Integer.parseInt(headerValue);
         user.setUserId(i);
-        int i1 = userService.editProfile(user);
-        if(i1>0){
+        User i1 = userService.editProfile(user);
+        if(i1!=null){
             return ResponseEntity.ok("edit profile success");
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("edit profile failed");

@@ -3,6 +3,9 @@ package com.unsw.back_end.service;
 import com.unsw.back_end.mapper.CarspaceMapper;
 import com.unsw.back_end.pojo.Carspace;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
@@ -14,17 +17,21 @@ public class CarSpaceServiceImp implements CarSpaceService {
     CarspaceMapper carspaceMapper;
 
     @Override
-    public int addCarSpace(Carspace carspace) {
+    @CachePut(key = "#result.carSpaceId",value = "myCarSpace",condition = "#result!=null")
+    public Carspace addCarSpace(Carspace carspace) {
         Carspace carspace1 = carspaceMapper.selectByAddress(carspace.getAddress());
         if(carspace1==null){
-            return carspaceMapper.insertSelective(carspace);
+            carspaceMapper.insertSelective(carspace);
+            System.out.println(carspace);
+            return carspace;
         }
-        return 0;
+        return null;
 
     }
 
     @Override
-    public int updateCarSpace(Carspace carspace) {
+    @CachePut(key = "#carspace.carSpaceId", value = "myCarSpace")
+    public Carspace updateCarSpace(Carspace carspace) {
         Integer carSpaceId = carspace.getCarSpaceId();
         LinkedList<Carspace> carspaces = carspaceMapper.selectByUserId(carspace.getUserId());
         Carspace carspace2 = carspaceMapper.selectByPrimaryKey(carSpaceId);
@@ -32,40 +39,42 @@ public class CarSpaceServiceImp implements CarSpaceService {
             String address = carspace.getAddress();
             Carspace carspace1 = carspaceMapper.selectByAddress(carspace.getAddress());
             if(carspace1==null){
-                return carspaceMapper.updateByPrimaryKeySelective(carspace);
+                carspaceMapper.updateByPrimaryKeySelective(carspace);
+                Carspace carspace3 = carspaceMapper.selectByPrimaryKey(carSpaceId);
+                return carspace3;
             }
         }
 
-        return 0;
+        return null;
+    }
+
+
+
+    @Override
+    public LinkedList<Carspace> queryYourOwnedSpace(int userId) {
+        return carspaceMapper.selectByUserId(userId);
+    }
+
+
+
+    @Override
+    public LinkedList<Carspace> queryAllSpace() {
+        return carspaceMapper.selectAllSpace();
     }
 
     @Override
-    public LinkedList<Carspace> queryYourOwnedSpace(int userId, int pageNum) {
-        LinkedList<Carspace> carspaces = carspaceMapper.selectByUserId(userId);
-        int pageSize = 3;
-        int count = 0;
-        int size = carspaces.size();
-        int start = pageNum*pageSize-3;
-
-        LinkedList<Carspace> result = new LinkedList<Carspace>();
-        if(pageNum*pageSize<=size){
-            while(count<3){
-                result.add(carspaces.get(start+count));
-                count++;
-            }
-        }else{
-            int stopNum = pageSize-(pageNum*pageSize -size);
-            while(count<stopNum){
-                result.add(carspaces.get(start+count));
-                count++;
-            }
-        }
-        return result;
+    @Cacheable(key = "#carSpaceId",value = "myCarSpace")
+    public Carspace querySingleSpace(int carSpaceId) {
+        return carspaceMapper.selectByPrimaryKey(carSpaceId);
     }
 
     @Override
-    public int quertPageNum(int userId) {
-        LinkedList<Carspace> carspaces = carspaceMapper.selectByUserId(userId);
-        return carspaces.size();
+    @CacheEvict(key = "#carSpaceId",value = "myCarSpace")
+    public int deleteCarSpace(int carSpaceId) {
+
+        return carspaceMapper.deleteByPrimaryKey(carSpaceId);
     }
+
+
+
 }

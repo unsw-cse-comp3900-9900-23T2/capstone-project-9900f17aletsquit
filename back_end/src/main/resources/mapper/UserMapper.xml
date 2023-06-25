@@ -9,9 +9,10 @@
     <result column="wallet_extra" jdbcType="FLOAT" property="walletExtra" />
     <result column="vip_deadline" jdbcType="DATE" property="vipDeadline" />
     <result column="cur_status" jdbcType="BOOLEAN" property="curStatus" />
+    <result column="userimage" jdbcType="VARCHAR" property="userimage" />
   </resultMap>
   <sql id="Base_Column_List">
-    user_id, u_password, email, username, wallet_extra, vip_deadline, cur_status
+    user_id, u_password, email, username, wallet_extra, vip_deadline, cur_status, userimage
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -19,13 +20,13 @@
     from user
     where user_id = #{userId,jdbcType=INTEGER}
   </select>
-
   <select id="selectByUsername" parameterType="java.lang.String" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from user
     where username = #{username,jdbcType=VARCHAR}
   </select>
+
   <select id="selectByEmail" parameterType="java.lang.String" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
@@ -39,11 +40,11 @@
   </delete>
   <insert id="insert" keyColumn="user_id" keyProperty="userId" parameterType="com.unsw.back_end.pojo.User" useGeneratedKeys="true">
     insert into user (u_password, email, username, 
-      wallet_extra, vip_deadline, cur_status
-      )
+      wallet_extra, vip_deadline, cur_status, 
+      userimage)
     values (#{uPassword,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, 
-      #{walletExtra,jdbcType=FLOAT}, #{vipDeadline,jdbcType=DATE}, #{curStatus,jdbcType=BOOLEAN}
-      )
+      #{walletExtra,jdbcType=FLOAT}, #{vipDeadline,jdbcType=DATE}, #{curStatus,jdbcType=BOOLEAN}, 
+      #{userimage,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" keyColumn="user_id" keyProperty="userId" parameterType="com.unsw.back_end.pojo.User" useGeneratedKeys="true">
     insert into user
@@ -66,6 +67,9 @@
       <if test="curStatus != null">
         cur_status,
       </if>
+      <if test="userimage != null">
+        userimage,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="uPassword != null">
@@ -85,6 +89,9 @@
       </if>
       <if test="curStatus != null">
         #{curStatus,jdbcType=BOOLEAN},
+      </if>
+      <if test="userimage != null">
+        #{userimage,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -109,6 +116,9 @@
       <if test="curStatus != null">
         cur_status = #{curStatus,jdbcType=BOOLEAN},
       </if>
+      <if test="userimage != null">
+        userimage = #{userimage,jdbcType=VARCHAR},
+      </if>
     </set>
     where user_id = #{userId,jdbcType=INTEGER}
   </update>
@@ -119,10 +129,8 @@
       username = #{username,jdbcType=VARCHAR},
       wallet_extra = #{walletExtra,jdbcType=FLOAT},
       vip_deadline = #{vipDeadline,jdbcType=DATE},
-      cur_status = #{curStatus,jdbcType=BOOLEAN}
+      cur_status = #{curStatus,jdbcType=BOOLEAN},
+      userimage = #{userimage,jdbcType=VARCHAR}
     where user_id = #{userId,jdbcType=INTEGER}
   </update>
-
-
-
 </mapper>

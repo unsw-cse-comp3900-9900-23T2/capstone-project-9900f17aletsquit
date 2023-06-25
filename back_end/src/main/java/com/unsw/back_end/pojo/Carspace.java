@@ -24,5 +24,7 @@ public class Carspace implements Serializable {
      */
     private Integer type;
 
+    private String carspaceimage;
+
     private static final long serialVersionUID = 1L;
 }

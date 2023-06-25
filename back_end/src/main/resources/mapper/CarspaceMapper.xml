@@ -8,9 +8,10 @@
     <result column="address" jdbcType="VARCHAR" property="address" />
     <result column="size" jdbcType="VARCHAR" property="size" />
     <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="carspaceimage" jdbcType="VARCHAR" property="carspaceimage" />
   </resultMap>
   <sql id="Base_Column_List">
-    car_space_id, user_id, price, address, `size`, `type`
+    car_space_id, user_id, price, address, `size`, `type`, carspaceimage
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -18,27 +19,35 @@
     from carspace
     where car_space_id = #{carSpaceId,jdbcType=INTEGER}
   </select>
-    <select id="selectByAddress" parameterType="java.lang.String" resultMap="BaseResultMap">
-      select
-      <include refid="Base_Column_List" />
-      from carspace
-      where address = #{address,jdbcType=VARCHAR}
-    </select>
+  <select id="selectByAddress" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from carspace
+    where address = #{address,jdbcType=VARCHAR}
+  </select>
   <select id="selectByUserId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from carspace
     where user_id = #{userId,jdbcType=INTEGER}
   </select>
+  <select id="selectAllSpace" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from carspace
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from carspace
     where car_space_id = #{carSpaceId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" keyColumn="car_space_id" keyProperty="carSpaceId" parameterType="com.unsw.back_end.pojo.Carspace" useGeneratedKeys="true">
     insert into carspace (user_id, price, address, 
-      `size`, `type`)
+      `size`, `type`, carspaceimage
+      )
     values (#{userId,jdbcType=INTEGER}, #{price,jdbcType=FLOAT}, #{address,jdbcType=VARCHAR}, 
-      #{size,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER})
+      #{size,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{carspaceimage,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" keyColumn="car_space_id" keyProperty="carSpaceId" parameterType="com.unsw.back_end.pojo.Carspace" useGeneratedKeys="true">
     insert into carspace
@@ -58,6 +67,9 @@
       <if test="type != null">
         `type`,
       </if>
+      <if test="carspaceimage != null">
+        carspaceimage,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="userId != null">
@@ -74,6 +86,9 @@
       </if>
       <if test="type != null">
         #{type,jdbcType=INTEGER},
+      </if>
+      <if test="carspaceimage != null">
+        #{carspaceimage,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -95,6 +110,9 @@
       <if test="type != null">
         `type` = #{type,jdbcType=INTEGER},
       </if>
+      <if test="carspaceimage != null">
+        carspaceimage = #{carspaceimage,jdbcType=VARCHAR},
+      </if>
     </set>
     where car_space_id = #{carSpaceId,jdbcType=INTEGER}
   </update>
@@ -104,7 +122,8 @@
       price = #{price,jdbcType=FLOAT},
       address = #{address,jdbcType=VARCHAR},
       `size` = #{size,jdbcType=VARCHAR},
-      `type` = #{type,jdbcType=INTEGER}
+      `type` = #{type,jdbcType=INTEGER},
+      carspaceimage = #{carspaceimage,jdbcType=VARCHAR}
     where car_space_id = #{carSpaceId,jdbcType=INTEGER}
   </update>
 </mapper>

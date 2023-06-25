@@ -3,7 +3,6 @@ package com.unsw.back_end.mapper;
 import com.unsw.back_end.pojo.Carspace;
 
 import java.util.LinkedList;
-import java.util.List;
 
 public interface CarspaceMapper {
     int deleteByPrimaryKey(Integer carSpaceId);
@@ -18,11 +17,10 @@ public interface CarspaceMapper {
 
     LinkedList<Carspace> selectByUserId(Integer userId);
 
+    LinkedList<Carspace> selectAllSpace();
+
     int updateByPrimaryKeySelective(Carspace record);
 
     int updateByPrimaryKey(Carspace record);
-
-
-
 
 }
