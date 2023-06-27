@@ -1,5 +1,4 @@
 package com.unsw.back_end.controller;
-
 import com.unsw.back_end.mapper.OrderMapper;
 import com.unsw.back_end.pojo.Order;
 import com.unsw.back_end.service.OrderService;
@@ -13,10 +12,14 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.LinkedList;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
 @RequestMapping("/order")
+@CrossOrigin(origins = "*")
 public class OrderController {
     @Autowired
     OrderService orderService;

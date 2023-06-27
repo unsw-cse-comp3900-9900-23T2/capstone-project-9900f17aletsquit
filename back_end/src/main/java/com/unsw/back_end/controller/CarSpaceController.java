@@ -13,6 +13,7 @@ import java.util.LinkedList;
 
 @RestController
 @RequestMapping("/carspace")
+@CrossOrigin(origins = "*")
 public class CarSpaceController {
     @Autowired
     CarSpaceService carSpaceService;

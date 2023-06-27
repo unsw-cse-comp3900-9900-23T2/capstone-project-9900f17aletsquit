@@ -1,4 +1,19 @@
-Date: 12/06/2023
-Task:
-  Finish the group project proposal, write the problem statement, existing systems, project objectives(PO) and novel function parts.
-  Besides, the Jira Sprints and the screenshot of it should be done.
+WEEK1：
+1. Set up the time
+2. Make the decision of the choice of project
+
+WEEK2:
+1. Meeting and Discussing about the specific division of work of the project
+2. Learing techniqual skills like JAVA springboot and make some other preparation for the project
+
+WEEK3:
+1. Finish the group project proposal, write the problem statement, existing systems, project objectives(PO) and novel function parts.
+2. Besides, the Jira Sprints and the screenshot of it should be done.
+
+WEEK4:
+1. Realize the construction and basic testing of back-end springboot framework.
+2. Realize some function and make the testing work of them
+    a.user register
+    b.user log in/out
+    c.sending and writing user functions
+    d.adding, modifying, deleting and querying parking car spaces
