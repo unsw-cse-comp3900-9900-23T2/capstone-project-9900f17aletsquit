@@ -10,9 +10,10 @@
     <result column="vip_deadline" jdbcType="DATE" property="vipDeadline" />
     <result column="cur_status" jdbcType="BOOLEAN" property="curStatus" />
     <result column="userimage" jdbcType="VARCHAR" property="userimage" />
+    <result column="birthday" jdbcType="DATE" property="birthday" />
   </resultMap>
   <sql id="Base_Column_List">
-    user_id, u_password, email, username, wallet_extra, vip_deadline, cur_status, userimage
+    user_id, u_password, email, username, wallet_extra, vip_deadline, cur_status, userimage,birthday
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -41,10 +42,10 @@
   <insert id="insert" keyColumn="user_id" keyProperty="userId" parameterType="com.unsw.back_end.pojo.User" useGeneratedKeys="true">
     insert into user (u_password, email, username, 
       wallet_extra, vip_deadline, cur_status, 
-      userimage)
+      userimage,birthday)
     values (#{uPassword,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, 
       #{walletExtra,jdbcType=FLOAT}, #{vipDeadline,jdbcType=DATE}, #{curStatus,jdbcType=BOOLEAN}, 
-      #{userimage,jdbcType=VARCHAR})
+      #{userimage,jdbcType=VARCHAR},#{birthday,jdbcType=DATE})
   </insert>
   <insert id="insertSelective" keyColumn="user_id" keyProperty="userId" parameterType="com.unsw.back_end.pojo.User" useGeneratedKeys="true">
     insert into user
@@ -70,6 +71,9 @@
       <if test="userimage != null">
         userimage,
       </if>
+      <if test="birthday != null">
+        birthday,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="uPassword != null">
@@ -92,6 +96,9 @@
       </if>
       <if test="userimage != null">
         #{userimage,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null">
+        #{birthday,jdbcType=DATE},
       </if>
     </trim>
   </insert>
@@ -119,6 +126,9 @@
       <if test="userimage != null">
         userimage = #{userimage,jdbcType=VARCHAR},
       </if>
+      <if test="birthday != null">
+        birthday = #{birthday,jdbcType=DATE},
+      </if>
     </set>
     where user_id = #{userId,jdbcType=INTEGER}
   </update>
@@ -130,7 +140,8 @@
       wallet_extra = #{walletExtra,jdbcType=FLOAT},
       vip_deadline = #{vipDeadline,jdbcType=DATE},
       cur_status = #{curStatus,jdbcType=BOOLEAN},
-      userimage = #{userimage,jdbcType=VARCHAR}
+      userimage = #{userimage,jdbcType=VARCHAR},
+      birthday = #{birthday,jdbcType=DATE}
     where user_id = #{userId,jdbcType=INTEGER}
   </update>
-</mapper>
+        </mapper>

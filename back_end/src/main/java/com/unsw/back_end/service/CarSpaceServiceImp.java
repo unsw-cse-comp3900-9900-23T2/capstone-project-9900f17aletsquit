@@ -75,6 +75,23 @@ public class CarSpaceServiceImp implements CarSpaceService {
         return carspaceMapper.deleteByPrimaryKey(carSpaceId);
     }
 
+    @Override
+    public LinkedList<Carspace> queryByAddressAndOrder(String address, int orderValue) {
+        switch (orderValue){
+            case 1:
+
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+            default:
+                return null;
+        }
+        return null;
+    }
 
 
 }

@@ -26,5 +26,9 @@ public class Carspace implements Serializable {
 
     private String carspaceimage;
 
+    private Double totalrank;
+
+    private Integer ranknum;
+
     private static final long serialVersionUID = 1L;
 }

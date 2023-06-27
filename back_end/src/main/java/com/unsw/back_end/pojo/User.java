@@ -29,5 +29,7 @@ public class User implements Serializable {
 
     private String userimage;
 
+    private Date birthday;
+
     private static final long serialVersionUID = 1L;
 }

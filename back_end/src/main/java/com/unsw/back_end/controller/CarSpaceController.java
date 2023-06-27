@@ -65,4 +65,9 @@ public class CarSpaceController {
         }
         return ResponseEntity.ok().body(carspace);
     }
+
+    @GetMapping("/queryByAddressAndOrder")
+    public ResponseEntity<?> queryByAddressAndOrder(@RequestHeader("order") String orderValue, @RequestBody Carspace address) {
+        return ResponseEntity.ok(carSpaceService.queryByAddressAndOrder(address.getAddress(), Integer.parseInt(orderValue)));
+    }
 }

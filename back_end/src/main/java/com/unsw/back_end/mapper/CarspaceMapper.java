@@ -23,4 +23,6 @@ public interface CarspaceMapper {
 
     int updateByPrimaryKey(Carspace record);
 
+
+
 }
