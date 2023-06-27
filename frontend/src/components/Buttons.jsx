@@ -3,14 +3,14 @@ import MUIButton from '@mui/material/Button';
 
 function Button (props) {
   return <MUIButton
-  sx = {{
-    paddingTop: '10px',
-    paddingBottom: '10px',
-    margin: '10px'
-  }}
-  {...props}
+    sx = {{
+      paddingTop: '10px',
+      paddingBottom: '10px',
+      margin: '10px'
+    }}
+    {...props}
   >
-  {props.children}
+    {props.children}
   </MUIButton>
 }
 

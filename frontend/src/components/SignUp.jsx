@@ -31,17 +31,17 @@ const styles2 = {
   marginTop: '10px',
 };
 
-function SignUp ({ onSuccess }) {
+function SignUp () {
   const [email, setEmail] = React.useState('');
   const [upassword, setUpassword] = React.useState('');
   const [username, setUsername] = React.useState('');
-  const [photo, setPhoto] = React.useState(null);
+  const [userimage, setUserimage] = React.useState(null);
   const [birthday, setBirthday] = React.useState('');
 
   const navigate = useNavigate();
 
   async function register () {
-    const response = await fetch('http://localhost:8800/user/register', {
+    await fetch('http://localhost:8800/user/register', {
       method: 'POST',
       headers: {
         'Content-type': 'application/json',
@@ -50,16 +50,16 @@ function SignUp ({ onSuccess }) {
         username,
         email,
         upassword,
+        userimage,
+        birthday,
       }),
     });
-    const data = await response.json();
-    onSuccess(data.token);
-    navigate('/dashboard');
+    navigate('/signin');
   }
 
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
-    setPhoto(file);
+    setUserimage(file);
   };
 
   const handleBirthdayChange = (e) => {
@@ -80,9 +80,9 @@ function SignUp ({ onSuccess }) {
               style={{ display: 'none' }}
             />
             <IconButton component="span">
-              {photo
+              {userimage
                 ? (
-                  <Avatar src={URL.createObjectURL(photo)} />
+                  <Avatar src={URL.createObjectURL(userimage)} />
                 )
                 : (
                   <AccountCircleIcon fontSize="large" />

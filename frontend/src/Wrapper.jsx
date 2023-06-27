@@ -5,7 +5,6 @@ import Site from './components/Site';
 import SignIn from './components/SignIn';
 import SignUp from './components/SignUp';
 import Dashboard from './components/Dashboard';
-import EditQuestion from './components/EditQuestion';
 import Result from './components/Result';
 import MyBookings from './components/MyBookings/MyBookings';
 import MyProfile from './components/MyProfile/MyProfile';
@@ -52,9 +51,8 @@ function Wrapper () {
       <Routes>
         <Route path="/" element={<Site setToken={setToken} />}>
           <Route path="/dashboard" element={<Dashboard token = {token} />} />
-          <Route path="/editquestion" element={<EditQuestion />} />
           <Route path="/result" element={<Result token = {token} />} />
-          <Route path="/signup" element={<SignUp onSuccess={manageTokenSet} />} />
+          <Route path="/signup" element={<SignUp />} />
           <Route path="/signin" element={<SignIn onSuccess={manageTokenSet} />} />
           <Route path="/adminsignin" element={<AdminSignIn onSuccess={manageTokenSet} />} />
           <Route path="/mybookings" element={<MyBookings />} />

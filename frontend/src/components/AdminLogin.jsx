@@ -29,7 +29,7 @@ const styles2 = {
 };
 
 function AdminSignIn ({ onSuccess }) {
-  const [email, setEmail] = React.useState('');
+  const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
   const navigate = useNavigate();
 
@@ -40,7 +40,7 @@ function AdminSignIn ({ onSuccess }) {
         'Content-type': 'application/json',
       },
       body: JSON.stringify({
-        email,
+        username,
         password,
       }),
     });
@@ -55,10 +55,10 @@ function AdminSignIn ({ onSuccess }) {
       <div style={styles.container}>
         <TextField
           id="outlined-basic"
-          label="Email"
+          label="Username"
           variant="outlined"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
           style={styles.textField}
         />
         <TextField

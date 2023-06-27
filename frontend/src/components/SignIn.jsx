@@ -55,7 +55,7 @@ function SignIn ({ onSuccess }) {
       <div style={styles.container}>
         <TextField
           id="outlined-basic"
-          label="Email"
+          label="Username"
           variant="outlined"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
