@@ -35,7 +35,5 @@ public class OrderController {
             return ResponseEntity.ok("The date and time of your application are reasonable.");
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The date and time of your parking space have been reserved by others.");
-
-//        System.out.println(order.getFromTime());
     }
 }

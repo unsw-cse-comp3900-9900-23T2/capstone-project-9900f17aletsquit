@@ -1,13 +1,15 @@
 package com.unsw.back_end.controller;
-
-import com.unsw.back_end.pojo.Carspace;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.unsw.back_end.pojo.User;
 import com.unsw.back_end.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
@@ -18,7 +20,7 @@ public class UserController {
     private UserService userService;
 
     @PutMapping("/login")
-    public ResponseEntity<?> login(@RequestBody User user){
+    public ResponseEntity<?> login(@RequestBody User user) throws JsonProcessingException {
         String username = user.getUsername();
         String uPassword = user.getUPassword();
 
@@ -31,12 +33,16 @@ public class UserController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("You have already login");
             }
             String token = user1.getUserId()+"";
-            return ResponseEntity.ok().header("token",token).body("Login success and token sent successfully");
+            Map<String, String> responseMap = new HashMap<>();
+            responseMap.put("token", token);
+            ObjectMapper objectMapper = new ObjectMapper();
+            String json = objectMapper.writeValueAsString(responseMap);
+            return ResponseEntity.ok().body(json);
         }
     }
 
     @PostMapping("/loginAdmin")
-    public ResponseEntity<?> loginAdmin(@RequestBody User user){
+    public ResponseEntity<?> loginAdmin(@RequestBody User user) throws JsonProcessingException {
         String username = user.getUsername();
         String uPassword = user.getUPassword();
         User user1= userService.login(username, uPassword);
@@ -44,7 +50,11 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Login failed");
         }else{
             String token = user.getUserId()+"";
-            return ResponseEntity.ok().header("token",token).body("Login success admin");
+            Map<String, String> responseMap = new HashMap<>();
+            responseMap.put("token", token);
+            ObjectMapper objectMapper = new ObjectMapper();
+            String json = objectMapper.writeValueAsString(responseMap);
+            return ResponseEntity.ok().body(json);
         }
     }
 
