@@ -10,3 +10,12 @@ Week 3
 
 We had several meetings to sort out the detail in the proposal and finished the proposal. 
 Discussed the relevant structure of the database with my companions, and decided the main content of the table in mysql.
+
+Week 4
+
+This week, we realized the construction and basic testing of the back-end springboot framework. 
+In addition, we also realized the writing and testing of some functions, including: user registration, 
+login and logout functions, administrator login and logout functions, sending and writing user 
+information functions, and adding, modifying, deleting and querying parking spaces. Based on some 
+functions, we have implemented the redis cache, so that all CRUD operations will not be queried from 
+the database but extracted from the redis cache, which reduces the consumption of resources.
