@@ -2,6 +2,9 @@ package com.unsw.back_end.mapper;
 
 import com.unsw.back_end.pojo.Order;
 
+import java.util.Date;
+import java.util.LinkedList;
+
 public interface OrderMapper {
     int deleteByPrimaryKey(Integer orderId);
 
@@ -14,4 +17,6 @@ public interface OrderMapper {
     int updateByPrimaryKeySelective(Order record);
 
     int updateByPrimaryKey(Order record);
+
+    LinkedList<Order> dateSearch(Date fromtime, Date totime);
 }

@@ -18,6 +18,6 @@ public interface CarSpaceService {
 
     public int deleteCarSpace(int carSpaceId);
 
-    public LinkedList<Carspace> queryByAddressAndOrder(String address, int orderValue);
+    public LinkedList<Carspace> queryByAddressAndOrder(String city, String suburb, String street, int orderValue);
 
 }

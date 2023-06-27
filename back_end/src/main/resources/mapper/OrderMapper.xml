@@ -19,15 +19,22 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from order
+    from `order`
     where order_id = #{orderId,jdbcType=INTEGER}
   </select>
+  <select id="dateSearch" parameterType="java.util.Date" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from `order`
+    where (from_time &lt;= #{fromtime,jdbcType=DATE}and to_time &gt;= #{fromtime,jdbcType=DATE})
+    or (from_time &lt;= #{totime,jdbcType=DATE}and to_time &gt;= #{totime,jdbcType=DATE})
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from order
+    delete from `order`
     where order_id = #{orderId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" keyColumn="order_id" keyProperty="orderId" parameterType="com.unsw.back_end.pojo.Order" useGeneratedKeys="true">
-    insert into order (from_time, to_time, customer_id, 
+    insert into `order` (from_time, to_time, customer_id,
       provider_id, car_space_id, `sum`, 
       cur_rank, history_comment)
     values (#{fromTime,jdbcType=DATE}, #{toTime,jdbcType=DATE}, #{customerId,jdbcType=INTEGER}, 
@@ -35,7 +42,7 @@
       #{curRank,jdbcType=FLOAT}, #{historyComment,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" keyColumn="order_id" keyProperty="orderId" parameterType="com.unsw.back_end.pojo.Order" useGeneratedKeys="true">
-    insert into order
+    insert into `order`
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="fromTime != null">
         from_time,
@@ -90,7 +97,7 @@
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.unsw.back_end.pojo.Order">
-    update order
+    update `order`
     <set>
       <if test="fromTime != null">
         from_time = #{fromTime,jdbcType=DATE},
@@ -120,7 +127,7 @@
     where order_id = #{orderId,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.unsw.back_end.pojo.Order">
-    update order
+    update `order`
     set from_time = #{fromTime,jdbcType=DATE},
       to_time = #{toTime,jdbcType=DATE},
       customer_id = #{customerId,jdbcType=INTEGER},

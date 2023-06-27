@@ -23,6 +23,12 @@ public interface CarspaceMapper {
 
     int updateByPrimaryKey(Carspace record);
 
+    LinkedList<Carspace> selectByAddressAndPriceAsc(String city, String suburb, String street);
 
+    LinkedList<Carspace> selectByAddressAndPriceDes(String city, String suburb, String street);
+
+    LinkedList<Carspace> selectByAddressAndRankAsc(String city, String suburb, String street);
+
+    LinkedList<Carspace> selectByAddressAndRankDes(String city, String suburb, String street);
 
 }

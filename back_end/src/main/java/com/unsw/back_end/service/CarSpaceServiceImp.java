@@ -76,21 +76,19 @@ public class CarSpaceServiceImp implements CarSpaceService {
     }
 
     @Override
-    public LinkedList<Carspace> queryByAddressAndOrder(String address, int orderValue) {
+    public LinkedList<Carspace> queryByAddressAndOrder(String city, String suburb, String street, int orderValue) {
         switch (orderValue){
             case 1:
-
-                break;
+                return carspaceMapper.selectByAddressAndPriceAsc(city,suburb,street);
             case 2:
-                break;
+                return  carspaceMapper.selectByAddressAndPriceDes(city,suburb,street);
             case 3:
-                break;
+                return carspaceMapper.selectByAddressAndRankAsc(city,suburb,street);
             case 4:
-                break;
+                return carspaceMapper.selectByAddressAndRankDes(city,suburb,street);
             default:
                 return null;
         }
-        return null;
     }
 
 

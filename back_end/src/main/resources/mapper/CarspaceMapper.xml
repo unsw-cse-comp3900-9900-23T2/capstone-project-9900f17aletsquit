@@ -38,7 +38,34 @@
     <include refid="Base_Column_List" />
     from carspace
   </select>
-
+  <select id="selectByAddressAndPriceAsc" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from carspace
+    where address like CONCAT('%', #{city, jdbcType=VARCHAR}, '%') and address like CONCAT('%', #{suburb, jdbcType=VARCHAR}, '%') and address like CONCAT('%', #{street, jdbcType=VARCHAR}, '%')
+    order by price
+  </select>
+  <select id="selectByAddressAndPriceDes" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from carspace
+    where address like CONCAT('%', #{city, jdbcType=VARCHAR}, '%') and address like CONCAT('%', #{suburb, jdbcType=VARCHAR}, '%') and address like CONCAT('%', #{street, jdbcType=VARCHAR}, '%')
+    order by price desc
+  </select>
+  <select id="selectByAddressAndRankAsc" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from carspace
+    where address like CONCAT('%', #{city, jdbcType=VARCHAR}, '%') and address like CONCAT('%', #{suburb, jdbcType=VARCHAR}, '%') and address like CONCAT('%', #{street, jdbcType=VARCHAR}, '%')
+    order by totalrank
+  </select>
+  <select id="selectByAddressAndRankDes" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from carspace
+    where address like CONCAT('%', #{city, jdbcType=VARCHAR}, '%') and address like CONCAT('%', #{suburb, jdbcType=VARCHAR}, '%') and address like CONCAT('%', #{street, jdbcType=VARCHAR}, '%')
+    order by totalrank desc
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from carspace
     where car_space_id = #{carSpaceId,jdbcType=INTEGER}
