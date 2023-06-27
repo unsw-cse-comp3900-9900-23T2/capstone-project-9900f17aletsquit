@@ -24,7 +24,16 @@ function Site ({ setToken }) {
   const location = useLocation();
   const navigate = useNavigate();
 
-  function Logout () {
+  async function Logout (token) {
+    const response = await fetch('http://localhost:8800/user/logout', {
+      method: 'PUT',
+      headers: {
+        'Content-type': 'application/json',
+        token: token,
+      },
+    });
+    const data = await response.json();
+    console.log(data.token);
     setToken(null);
     localStorage.removeItem('token');
     navigate('signin');

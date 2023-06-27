@@ -29,19 +29,19 @@ const styles2 = {
 };
 
 function SignIn ({ onSuccess }) {
-  const [email, setEmail] = React.useState('');
+  const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
   const navigate = useNavigate();
 
   async function login () {
-    const response = await fetch('http://localhost:5005/admin/auth/login', {
-      method: 'POST',
+    const response = await fetch('http://localhost:8800/user/login', {
+      method: 'PUT',
       headers: {
         'Content-type': 'application/json',
       },
       body: JSON.stringify({
-        email,
         password,
+        username,
       }),
     });
     const data = await response.json();
@@ -57,8 +57,8 @@ function SignIn ({ onSuccess }) {
           id="outlined-basic"
           label="Email"
           variant="outlined"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
           style={styles.textField}
         />
         <TextField
