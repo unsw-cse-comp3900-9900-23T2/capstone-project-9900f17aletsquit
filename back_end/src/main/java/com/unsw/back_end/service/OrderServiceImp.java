@@ -67,7 +67,7 @@ public class OrderServiceImp implements OrderService {
             String curcomment = carspace.getCurcomment();
             String historyComment = order.getHistoryComment();
             Double new_rank = (totalrank+order.getCurRank())/(ranknum+1);
-            if(curcomment!=null&&curcomment.length()+historyComment.length()>60000){
+            if(curcomment!=null&&curcomment.length()+historyComment.length()>30000){
                 return 3;
             }else {
                 String new_comment = historyComment+curcomment;
