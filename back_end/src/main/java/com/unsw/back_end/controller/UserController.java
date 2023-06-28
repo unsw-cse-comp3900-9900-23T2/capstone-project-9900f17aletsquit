@@ -27,7 +27,7 @@ public class UserController {
         User user1= userService.login(username, uPassword);
 
         if(user1 == null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Login failed");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Login failed");
         }else{
             String token = user1.getUserId()+"";
             Map<String, String> responseMap = new HashMap<>();
@@ -44,7 +44,7 @@ public class UserController {
         String uPassword = user.getUPassword();
         User user1= userService.login(username, uPassword);
         if(user1 == null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Login failed");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Login failed");
         }else{
             String token = user.getUserId()+"";
             Map<String, String> responseMap = new HashMap<>();
