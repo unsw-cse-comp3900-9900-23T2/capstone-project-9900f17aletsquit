@@ -29,9 +29,6 @@ public class UserController {
         if(user1 == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Login failed");
         }else{
-            if(user1.getUserId()==0){
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("You have already login");
-            }
             String token = user1.getUserId()+"";
             Map<String, String> responseMap = new HashMap<>();
             responseMap.put("token", token);

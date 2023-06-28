@@ -11,9 +11,10 @@
     <result column="carspaceimage" jdbcType="VARCHAR" property="carspaceimage" />
     <result column="totalrank" jdbcType="FLOAT" property="totalrank" />
     <result column="ranknum" jdbcType="INTEGER" property="ranknum" />
+    <result column="curcomment" jdbcType="VARCHAR" property="curcomment" />
   </resultMap>
   <sql id="Base_Column_List">
-    car_space_id, user_id, price, address, `size`, `type`, carspaceimage, totalrank, ranknum
+    car_space_id, user_id, price, address, `size`, `type`, carspaceimage, totalrank, ranknum, curcomment
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -72,11 +73,10 @@
   </delete>
   <insert id="insert" keyColumn="car_space_id" keyProperty="carSpaceId" parameterType="com.unsw.back_end.pojo.Carspace" useGeneratedKeys="true">
     insert into carspace (user_id, price, address, 
-      `size`, `type`, carspaceimage,totalrank,ranknum
-      )
+      `size`, `type`, carspaceimage,totalrank,ranknum,curcomment)
     values (#{userId,jdbcType=INTEGER}, #{price,jdbcType=FLOAT}, #{address,jdbcType=VARCHAR}, 
       #{size,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{carspaceimage,jdbcType=VARCHAR},
-    #{totalrank,jdbcType=FLOAT}, #{ranknum,jdbcType=INTEGER}
+    #{totalrank,jdbcType=FLOAT}, #{ranknum,jdbcType=INTEGER},#{curcomment,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" keyColumn="car_space_id" keyProperty="carSpaceId" parameterType="com.unsw.back_end.pojo.Carspace" useGeneratedKeys="true">
@@ -106,6 +106,9 @@
       <if test="ranknum != null">
         ranknum,
       </if>
+      <if test="curcomment != null">
+        curcomment,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="userId != null">
@@ -131,6 +134,9 @@
       </if>
       <if test="ranknum != null">
         #{ranknum,jdbcType=INTEGER},
+      </if>
+      <if test="curcomment != null">
+        #{curcomment,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -161,6 +167,9 @@
       <if test="ranknum != null">
         ranknum = #{ranknum,jdbcType=INTEGER},
       </if>
+      <if test="curcomment != null">
+        curcomment = #{curcomment,jdbcType=VARCHAR},
+      </if>
     </set>
     where car_space_id = #{carSpaceId,jdbcType=INTEGER}
   </update>
@@ -173,7 +182,8 @@
       `type` = #{type,jdbcType=INTEGER},
       carspaceimage = #{carspaceimage,jdbcType=VARCHAR},
       totalrank = #{totalrank,jdbcType=FLOAT},
-      ranknum = #{ranknum,jdbcType=INTEGER}
+      ranknum = #{ranknum,jdbcType=INTEGER},
+      curcomment = #{curcomment,jdbcType=VARCHAR}
     where car_space_id = #{carSpaceId,jdbcType=INTEGER}
   </update>
 </mapper>

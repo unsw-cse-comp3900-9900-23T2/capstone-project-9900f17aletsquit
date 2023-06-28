@@ -30,5 +30,7 @@ public class Carspace implements Serializable {
 
     private Integer ranknum;
 
+    private String curcomment;
+
     private static final long serialVersionUID = 1L;
 }

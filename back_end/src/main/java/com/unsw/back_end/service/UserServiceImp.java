@@ -23,10 +23,6 @@ public class UserServiceImp implements UserService {
             return null;
         }
         if(password.equals(user.getUPassword())){
-            if(user.getCurStatus()){
-                user.setUserId(0);
-                return user;
-            }
             user.setCurStatus(true);
             userMapper.updateByPrimaryKeySelective(user);
             return user;

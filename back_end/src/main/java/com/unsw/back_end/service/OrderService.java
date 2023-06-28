@@ -7,4 +7,10 @@ import java.util.LinkedList;
 
 public interface OrderService {
     public int dateSearch(Date fromtime,Date totime);
+
+    public int addOrder(Order order);
+
+    public int editOrder(Order order);
+
+    public int removeOrder(int orderId);
 }

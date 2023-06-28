@@ -36,4 +36,42 @@ public class OrderController {
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The date and time of your parking space have been reserved by others.");
     }
+
+    @PostMapping("/addOrder")
+    public ResponseEntity<?> addOrder(@RequestBody Order order){
+        System.out.println(order);
+        int i = orderService.addOrder(order);
+        if(i==0){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to add your order");
+        }else if(i==2){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Sorry, your extra isn't enough");
+        }
+        return ResponseEntity.ok("Add your order successfully");
+    }
+
+    @PutMapping("/rankYourOrder")
+    public ResponseEntity<?> rankYourOrder(@RequestBody Order order){
+        int i = orderService.editOrder(order);
+        if(i==0){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Sorry,it's too early to evaluate your order.");
+        }else if(i==1){
+            return ResponseEntity.ok("Thank your for your comment and we will continue to improve us");
+        }else if(i==2){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Sorry, you have evaluated your order");
+        }else if(i==3){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Sorry,due to system reasons, comments are temporarily unavailable.");
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to edit your order");
+        }
+    }
+
+    @DeleteMapping("/deleteOrder")
+    public ResponseEntity<?> deleteOrder(@RequestParam("orderid") Integer orderId){
+        int i = orderService.removeOrder(orderId);
+        if(i==0){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Sorry,it's too late to delete it.");
+        }
+        return ResponseEntity.ok("Delete your order success.");
+    }
+
 }
