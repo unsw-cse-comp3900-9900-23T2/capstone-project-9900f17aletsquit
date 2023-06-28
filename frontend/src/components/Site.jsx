@@ -25,15 +25,13 @@ function Site ({ setToken }) {
   const navigate = useNavigate();
 
   async function Logout (token) {
-    const response = await fetch('http://localhost:8800/user/logout', {
+    await fetch('http://localhost:8800/user/logout', {
       method: 'PUT',
       headers: {
         'Content-type': 'application/json',
         token: token,
       },
     });
-    const data = await response.json();
-    console.log(data.token);
     setToken(null);
     localStorage.removeItem('token');
     navigate('signin');
@@ -107,7 +105,7 @@ function Site ({ setToken }) {
 
   return (<>
     <header>
-      {!['/signup', '/signin'].includes(location.pathname)
+      {!['/signup', '/signin', '/adminsignin'].includes(location.pathname)
         ? (
           <>
             <AppBar position="static">

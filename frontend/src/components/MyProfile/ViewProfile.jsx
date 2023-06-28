@@ -1,61 +1,77 @@
 import React, { useState } from 'react';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import { IconButton, Avatar, Box } from '@mui/material';
+import { Typography, IconButton, Avatar, Box, TextField } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate } from 'react-router-dom';
 
-function MyProfile () {
-  // const [email, setEmail] = useState('');
-  // const [password, setPassword] = useState('');
-  // const [name, setName] = useState('');
-  // const [birthday, setBirthday] = useState('');
-  // const [photo, setPhoto] = useState(null);
-
-  const email = useState('hanchengxuan98@gmail.com');
-  const password = useState('1232445');
-  const name = useState('Chengxuan Han');
-  const birthday = useState('1998-09-30');
-  const photo = useState(null);
+function ViewMyProfile ({ token }) {
+  const [email, setEmail] = useState('');
+  const [upassword, setUpassword] = useState('');
+  const [username, setUserame] = useState('');
+  const [birthday, setBirthday] = useState('');
+  const [userImage, setUserImage] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
+  async function getProfile (token) {
+    console.log('123');
+    console.log(`token:${localStorage.token}`);
+    const response = await fetch('http://127.0.0.1:8800/user/sendProfile', {
+      method: 'GET',
+      headers: {
+        token: token,
+      },
+    });
+    const data = await response.json();
+    setEmail(data.email);
+    setUpassword(data.upassword);
+    setUserame(data.username);
+    setBirthday(data.birthday.split('T')[0]);
+    setUserImage(data.userimage);
+    console.log('done!');
+    console.log(`email: ${email}`);
+    console.log(`pwd: ${upassword}`);
+    console.log(`username: ${username}`);
+    console.log(`birthday: ${birthday}`);
+    console.log(`userimage: ${userImage}`);
+  }
 
-  // const handleEmailChange = (e) => {
-  //   setEmail(e.target.value);
-  // };
+  // 调用 getProfile 函数以初始化变量的值
+  getProfile(token);
 
-  // const handlePasswordChange = (e) => {
-  //   setPassword(e.target.value);
-  // };
-
-  // const handleNameChange = (e) => {
-  //   setName(e.target.value);
-  // };
-
-  // const handleBirthdayChange = (e) => {
-  //   setBirthday(e.target.value);
-  // };
-
-  // const handlePhotoChange = (e) => {
-  //   const file = e.target.files[0];
-  //   setPhoto(file);
-  // };
+  const handleTogglePasswordVisibility = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
+  };
 
   return (
     <>
       <form>
+        <Box textAlign="right" marginTop={-2} marginRight={2}>
+          <IconButton
+            aria-label="edit"
+            color="primary"
+            onClick={() => {
+              navigate('/editmyprofile');
+            }}
+          >
+            <EditIcon />
+          </IconButton>
+        </Box>
+
         <Box display="flex" justifyContent="center" marginBottom={2}>
-          <label htmlFor="photo-upload">
+          <label style={{ pointerEvents: 'none' }}>
             <input
               id="photo-upload"
               type="file"
               accept="image/*"
               style={{ display: 'none' }}
             />
-            <IconButton component="span">
-              {photo[0]
+            <IconButton component="span" onClick={null}>
+              {userImage[0]
                 ? (
-                  <Avatar src={URL.createObjectURL(photo[0])} />
+                  <Avatar src={`data:image/jpeg;base64,${userImage}`} />
                 )
                 : (
                   <AccountCircleIcon fontSize="large" />
@@ -64,62 +80,47 @@ function MyProfile () {
           </label>
         </Box>
 
-        <TextField
-          label="Email"
-          variant="outlined"
-          type="email"
-          value={email}
-          required
-          fullWidth
-          margin="normal"
-        />
-
-        <TextField
-          label="Password"
-          variant="outlined"
-          type="password"
-          value={password}
-          required
-          fullWidth
-          margin="normal"
-        />
-
-        <Box display="flex" justifyContent="flex-start" alignItems="center" marginBottom={2}>
-          <TextField
-            label="Name"
-            variant="outlined"
-            type="text"
-            value={name}
-            required
-            margin="normal"
-          />
-
-          <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-
-          <TextField
-            label="Birthday"
-            variant="outlined"
-            type="date"
-            value={birthday}
-            required
-            margin="normal"
-            InputLabelProps={{
-              shrink: true,
-            }}
-            InputProps={{
-              inputProps: { max: new Date().toISOString().split('T')[0] },
-            }}
-          />
+        <Box marginBottom={2} textAlign="center">
+          <Typography variant="h5" marginBottom="3%">{username}</Typography>
         </Box>
 
-        <Button type="submit" variant="contained" color="primary" onClick={() => {
-          navigate('/editmyprofile');
-        }}>
-          Edit
-        </Button>
+        <Box marginBottom={2} textAlign="center">
+          <Typography variant="body1" marginBottom="3%">
+            <strong>Email:</strong> {email}
+          </Typography>
+        </Box>
+
+        <Box display="flex" alignItems="center" marginBottom={2} textAlign="center">
+          <Typography variant="body1" component="span" marginRight={1}>
+            <strong>Password:</strong>
+          </Typography>
+          <Box flexGrow={1}>
+            <TextField
+              type={showPassword ? 'text' : 'password'}
+              value={upassword}
+              fullWidth
+              readOnly
+              onClick={() => {}}
+              InputProps={{
+                endAdornment: (
+                  <IconButton onClick={handleTogglePasswordVisibility} onMouseDown={(e) => e.preventDefault()}>
+                    {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                  </IconButton>
+                ),
+              }}
+              margin="none"
+            />
+          </Box>
+        </Box>
+
+        <Box marginBottom={2} textAlign="center">
+          <Typography variant="body1" marginBottom="3%">
+            <strong>Birthday:</strong> {birthday}
+          </Typography>
+        </Box>
       </form>
     </>
   );
 }
 
-export default MyProfile;
+export default ViewMyProfile;
