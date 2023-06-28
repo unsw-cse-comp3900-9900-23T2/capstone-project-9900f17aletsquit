@@ -1,23 +1,27 @@
 import React, { useState } from 'react';
-import { Typography, IconButton, Avatar, Box, TextField } from '@mui/material';
+import { Typography, IconButton, Avatar, Box, TextField, Paper, Grid } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import EditIcon from '@mui/icons-material/Edit';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import EmailIcon from '@mui/icons-material/Email';
+import HttpsIcon from '@mui/icons-material/Https';
 import { useNavigate } from 'react-router-dom';
 
 function ViewMyProfile ({ token }) {
   const [email, setEmail] = useState('');
   const [upassword, setUpassword] = useState('');
-  const [username, setUserame] = useState('');
+  const [username, setUsername] = useState('');
   const [birthday, setBirthday] = useState('');
   const [userImage, setUserImage] = useState('');
+  const [walletExtra, setWalletExtra] = useState(0.0);
   const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
+
   async function getProfile (token) {
-    console.log('123');
-    console.log(`token:${localStorage.token}`);
     const response = await fetch('http://127.0.0.1:8800/user/sendProfile', {
       method: 'GET',
       headers: {
@@ -27,28 +31,25 @@ function ViewMyProfile ({ token }) {
     const data = await response.json();
     setEmail(data.email);
     setUpassword(data.upassword);
-    setUserame(data.username);
+    setUsername(data.username);
     setBirthday(data.birthday.split('T')[0]);
     setUserImage(data.userimage);
-    console.log('done!');
-    console.log(`email: ${email}`);
-    console.log(`pwd: ${upassword}`);
-    console.log(`username: ${username}`);
-    console.log(`birthday: ${birthday}`);
-    console.log(`userimage: ${userImage}`);
+    setWalletExtra(parseFloat(data.walletExtra));
   }
 
-  // 调用 getProfile 函数以初始化变量的值
-  getProfile(token);
+  // 在组件加载时调用 getProfile 函数以初始化变量的值
+  React.useEffect(() => {
+    getProfile(token);
+  }, [token]);
 
   const handleTogglePasswordVisibility = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
   };
 
   return (
-    <>
-      <form>
-        <Box textAlign="right" marginTop={-2} marginRight={2}>
+    <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+      <Paper elevation={3} style={{ padding: '40px', maxWidth: '400px' }}>
+        <Box textAlign="right">
           <IconButton
             aria-label="edit"
             color="primary"
@@ -60,41 +61,27 @@ function ViewMyProfile ({ token }) {
           </IconButton>
         </Box>
 
-        <Box display="flex" justifyContent="center" marginBottom={2}>
-          <label style={{ pointerEvents: 'none' }}>
-            <input
-              id="photo-upload"
-              type="file"
-              accept="image/*"
-              style={{ display: 'none' }}
-            />
-            <IconButton component="span" onClick={null}>
-              {userImage[0]
-                ? (
-                  <Avatar src={`data:image/jpeg;base64,${userImage}`} />
-                )
-                : (
-                  <AccountCircleIcon fontSize="large" />
-                )}
-            </IconButton>
-          </label>
-        </Box>
-
-        <Box marginBottom={2} textAlign="center">
-          <Typography variant="h5" marginBottom="3%">{username}</Typography>
-        </Box>
-
-        <Box marginBottom={2} textAlign="center">
-          <Typography variant="body1" marginBottom="3%">
-            <strong>Email:</strong> {email}
+        <Box display="flex" flexDirection="column" alignItems="center" marginBottom={2}>
+          <Avatar src={`data:image/jpeg;base64,${userImage}`} sx={{ width: '120px', height: '120px' }}>
+            {!userImage && <AccountCircleIcon fontSize="large" />}
+          </Avatar>
+          <Typography variant="h5" marginTop="10px">
+            {username}
           </Typography>
         </Box>
 
-        <Box display="flex" alignItems="center" marginBottom={2} textAlign="center">
-          <Typography variant="body1" component="span" marginRight={1}>
-            <strong>Password:</strong>
-          </Typography>
-          <Box flexGrow={1}>
+        <Grid container spacing={2} alignItems="center">
+          <Grid item xs={1}>
+            <EmailIcon />
+          </Grid>
+          <Grid item xs={11}>
+            <Typography variant="body1">{email}</Typography>
+          </Grid>
+
+          <Grid item xs={1}>
+            <HttpsIcon />
+          </Grid>
+          <Grid item xs={11}>
             <TextField
               type={showPassword ? 'text' : 'password'}
               value={upassword}
@@ -110,16 +97,24 @@ function ViewMyProfile ({ token }) {
               }}
               margin="none"
             />
-          </Box>
-        </Box>
+          </Grid>
 
-        <Box marginBottom={2} textAlign="center">
-          <Typography variant="body1" marginBottom="3%">
-            <strong>Birthday:</strong> {birthday}
-          </Typography>
-        </Box>
-      </form>
-    </>
+          <Grid item xs={1}>
+            <CalendarMonthIcon />
+          </Grid>
+          <Grid item xs={11}>
+            <Typography variant="body1">{birthday}</Typography>
+          </Grid>
+
+          <Grid item xs={1}>
+            <AccountBalanceWalletIcon />
+          </Grid>
+          <Grid item xs={11}>
+            <Typography variant="body1">{walletExtra}</Typography>
+          </Grid>
+        </Grid>
+      </Paper>
+    </Box>
   );
 }
 

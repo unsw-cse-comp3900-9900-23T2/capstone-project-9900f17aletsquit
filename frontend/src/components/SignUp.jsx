@@ -60,7 +60,13 @@ function SignUp () {
 
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
-    setUserimage(file);
+    const reader = new FileReader();
+
+    reader.onload = (event) => {
+      setUserimage(event.target.result);
+    };
+
+    reader.readAsDataURL(file);
   };
 
   const handleBirthdayChange = (e) => {
@@ -114,7 +120,7 @@ function SignUp () {
             <IconButton component="span">
               {userimage
                 ? (
-                  <Avatar src={URL.createObjectURL(userimage)} />
+                  <Avatar src={userimage} />
                 )
                 : (
                   <AccountCircleIcon fontSize="large" />
