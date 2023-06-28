@@ -49,15 +49,15 @@ function Wrapper () {
   return (
     <>
       <Routes>
-        <Route path="/" element={<Site setToken={setToken} />}>
+        <Route path="/" element={<Site setToken = {setToken} />}>
           <Route path="/dashboard" element={<Dashboard token = {token} />} />
           <Route path="/result" element={<Result token = {token} />} />
           <Route path="/signup" element={<SignUp />} />
-          <Route path="/signin" element={<SignIn onSuccess={manageTokenSet} />} />
-          <Route path="/adminsignin" element={<AdminSignIn onSuccess={manageTokenSet} />} />
+          <Route path="/signin" element={<SignIn onSuccess = {manageTokenSet} />} />
+          <Route path="/adminsignin" element={<AdminSignIn onSuccess = {manageTokenSet} />} />
           <Route path="/mybookings" element={<MyBookings />} />
-          <Route path="/editmyprofile" element={<MyProfile />} />
-          <Route path="/myprofile" element={<ViewMyProfile />} />
+          <Route path="/editmyprofile" element={<MyProfile token = {token}/>} />
+          <Route path="/myprofile" element={<ViewMyProfile token = {token}/>} />
           <Route path="/myspot" element={<MySpot />} />
           <Route path="/inviteafriend" element={<InviteFriend />} />
           <Route path="/mywallet" element={<MyWallet />} />

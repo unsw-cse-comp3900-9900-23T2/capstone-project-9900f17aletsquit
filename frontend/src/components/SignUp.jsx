@@ -34,6 +34,7 @@ const styles2 = {
 function SignUp () {
   const [email, setEmail] = React.useState('');
   const [upassword, setUpassword] = React.useState('');
+  const [confirmPassword, setConfirmPassword] = React.useState('');
   const [username, setUsername] = React.useState('');
   const [userimage, setUserimage] = React.useState(null);
   const [birthday, setBirthday] = React.useState('');
@@ -59,11 +60,48 @@ function SignUp () {
 
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
-    setUserimage(file);
+    const reader = new FileReader();
+
+    reader.onload = (event) => {
+      setUserimage(event.target.result);
+    };
+
+    reader.readAsDataURL(file);
   };
 
   const handleBirthdayChange = (e) => {
     setBirthday(e.target.value);
+  };
+
+  const validatePassword = () => {
+    // Check if passwords match
+    if (upassword !== confirmPassword) {
+      alert("Passwords don't match");
+      return false;
+    }
+
+    // Check if password meets requirements
+    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
+    if (!passwordRegex.test(upassword)) {
+      alert(
+        'Password must contain at least 6 characters, including one uppercase letter, one lowercase letter, and one digit.'
+      );
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // Validate passwords
+    const isValidPassword = validatePassword();
+
+    if (isValidPassword) {
+      // Continue with registration
+      register();
+    }
   };
 
   return (
@@ -82,7 +120,7 @@ function SignUp () {
             <IconButton component="span">
               {userimage
                 ? (
-                  <Avatar src={URL.createObjectURL(userimage)} />
+                  <Avatar src={userimage} />
                 )
                 : (
                   <AccountCircleIcon fontSize="large" />
@@ -112,6 +150,16 @@ function SignUp () {
         />
         <TextField
           required
+          id="outlined-confirm-password-input"
+          label="Confirm Password"
+          type="password"
+          autoComplete="current-password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          style={styles.textField}
+        />
+        <TextField
+          required
           id="outlined-required"
           label="Name"
           variant="outlined"
@@ -134,7 +182,7 @@ function SignUp () {
             inputProps: { max: new Date().toISOString().split('T')[0] },
           }}
         />
-        <Button variant="outlined" onClick={register} style={styles.button}>
+        <Button variant="outlined" onClick={handleSubmit} style={styles.button}>
           Sign up
         </Button>
         <hr />

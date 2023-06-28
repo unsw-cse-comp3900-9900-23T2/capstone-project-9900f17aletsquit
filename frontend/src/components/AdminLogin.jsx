@@ -1,8 +1,7 @@
 import React from 'react';
 import TextField from '@mui/material/TextField';
-import { Link, useNavigate } from 'react-router-dom';
-
-import Button from './Buttons';
+import { useNavigate } from 'react-router-dom';
+import Button from '@mui/material/Button';
 
 const styles = {
   container: {
@@ -18,6 +17,16 @@ const styles = {
   button: {
     marginBottom: '20px',
   },
+  linkContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    marginBottom: '10px',
+  },
+  link: {
+    textDecoration: 'none',
+    color: 'inherit',
+    marginLeft: '5px',
+  },
 };
 
 const styles2 = {
@@ -30,28 +39,44 @@ const styles2 = {
 
 function AdminSignIn ({ onSuccess }) {
   const [username, setUsername] = React.useState('');
-  const [password, setPassword] = React.useState('');
+  const [upassword, setUpassword] = React.useState('');
+  const [error, setError] = React.useState(null);
   const navigate = useNavigate();
 
   async function login () {
-    const response = await fetch('http://localhost:5005/admin/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        username,
-        password,
-      }),
-    });
-    const data = await response.json();
-    onSuccess(data.token);
-    navigate('/dashboard');
+    try {
+      const response = await fetch('http://localhost:8800/user/login', {
+        method: 'PUT',
+        headers: {
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          upassword,
+          username,
+        }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        onSuccess(data.token);
+        console.log(`token:${data.token}`);
+        navigate('/dashboard');
+      } else {
+        setError(data.message);
+      }
+    } catch (error) {
+      if (error.message.includes('Login failed')) {
+        setError('Incorrect Password!');
+      } else {
+        setError('Unknown Error!');
+      }
+    }
   }
 
   return (
     <>
-      <div style={styles2}><h2>Car Space Renting</h2></div>
+      <div style={styles2}>
+        <h2>Car Space Renting</h2>
+      </div>
       <div style={styles.container}>
         <TextField
           id="outlined-basic"
@@ -66,15 +91,20 @@ function AdminSignIn ({ onSuccess }) {
           label="Password"
           type="password"
           autoComplete="current-password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          value={upassword}
+          onChange={(e) => setUpassword(e.target.value)}
           style={styles.textField}
+          error={error === 'Incorrect Password!'}
+          helperText={error === 'Incorrect Password!' ? 'Incorrect Password!' : null}
         />
         <Button variant="outlined" onClick={login} style={styles.button}>
           Sign in
         </Button>
-        <hr />
-        <Link to="/signin">Back to Sign in</Link>
+        <Button variant="outlined" onClick={() => {
+          navigate('/signin');
+        }} style={styles.button}>
+          Back to User Sign In
+        </Button>
       </div>
     </>
   );

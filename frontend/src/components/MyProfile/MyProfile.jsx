@@ -6,25 +6,45 @@ import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useNavigate } from 'react-router-dom';
 
-function MyProfile () {
+function MyProfile ({ token }) {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
+  const [upassword, setUpassword] = useState('');
+  const [username, setUsername] = useState('');
   const [birthday, setBirthday] = useState('');
-  const [photo, setPhoto] = useState(null);
+  const [userimage, setUserimage] = useState(null);
 
   const navigate = useNavigate();
+
+  async function editProfile () {
+    console.log('123');
+    console.log(`token:${localStorage.token}`);
+    await fetch('http://127.0.0.1:8800/user/editProfile', {
+      method: 'PUT',
+      headers: {
+        token: token,
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        username,
+        email,
+        userimage,
+        upassword,
+        birthday,
+      }),
+    });
+    navigate('/myprofile')
+  }
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
 
   const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
+    setUpassword(e.target.value);
   };
 
   const handleNameChange = (e) => {
-    setName(e.target.value);
+    setUsername(e.target.value);
   };
 
   const handleBirthdayChange = (e) => {
@@ -33,17 +53,18 @@ function MyProfile () {
 
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
-    setPhoto(file);
+    setUserimage(file);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    editProfile();
     console.log({
       email,
-      password,
-      name,
+      upassword,
+      username,
       birthday,
-      photo,
+      userimage,
     });
   };
 
@@ -60,9 +81,9 @@ function MyProfile () {
               style={{ display: 'none' }}
             />
             <IconButton component="span">
-              {photo
+              {userimage
                 ? (
-                  <Avatar src={URL.createObjectURL(photo)} />
+                  <Avatar src={URL.createObjectURL(userimage)} />
                 )
                 : (
                   <AccountCircleIcon fontSize="large" />
@@ -87,7 +108,7 @@ function MyProfile () {
           label="Password"
           variant="outlined"
           type="password"
-          value={password}
+          value={upassword}
           onChange={handlePasswordChange}
           required
           fullWidth
@@ -99,7 +120,7 @@ function MyProfile () {
             label="Name"
             variant="outlined"
             type="text"
-            value={name}
+            value={username}
             onChange={handleNameChange}
             required
             margin="normal"
