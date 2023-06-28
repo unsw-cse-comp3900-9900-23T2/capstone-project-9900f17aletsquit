@@ -62,7 +62,7 @@ function ViewMyProfile ({ token }) {
         </Box>
 
         <Box display="flex" flexDirection="column" alignItems="center" marginBottom={2}>
-          <Avatar src={`data:image/jpeg;base64,${userImage}`} sx={{ width: '120px', height: '120px' }}>
+          <Avatar src={`${userImage}`} sx={{ width: '120px', height: '120px' }}>
             {!userImage && <AccountCircleIcon fontSize="large" />}
           </Avatar>
           <Typography variant="h5" marginTop="10px">

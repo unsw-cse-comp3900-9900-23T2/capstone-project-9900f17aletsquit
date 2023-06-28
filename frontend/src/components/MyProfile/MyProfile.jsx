@@ -17,11 +17,11 @@ function MyProfile ({ token }) {
 
   async function editProfile () {
     console.log('123');
-    console.log(`token:${localStorage.token}`);
+    console.log(`token:${token}`);
     await fetch('http://127.0.0.1:8800/user/editProfile', {
       method: 'PUT',
       headers: {
-        token: token,
+        token: localStorage.token,
         'Content-type': 'application/json',
       },
       body: JSON.stringify({
