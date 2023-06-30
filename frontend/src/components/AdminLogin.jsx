@@ -75,7 +75,7 @@ function AdminSignIn ({ onSuccess }) {
   return (
     <>
       <div style={styles2}>
-        <h2>Car Space Renting</h2>
+        <h2>Admin Sign In</h2>
       </div>
       <div style={styles.container}>
         <TextField

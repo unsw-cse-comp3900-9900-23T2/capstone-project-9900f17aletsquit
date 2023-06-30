@@ -102,7 +102,7 @@ function MyProfile ({ token }) {
             <IconButton component="span">
               {userimage
                 ? (
-                  <Avatar src={URL.createObjectURL(userimage)} />
+                  <Avatar src={userimage} />
                 )
                 : (
                   <AccountCircleIcon fontSize="large" />
@@ -118,7 +118,6 @@ function MyProfile ({ token }) {
           type="email"
           value={email}
           onChange={handleEmailChange}
-          required
           fullWidth
           margin="normal"
         />
@@ -129,7 +128,6 @@ function MyProfile ({ token }) {
           type="password"
           value={upassword}
           onChange={handlePasswordChange}
-          required
           fullWidth
           margin="normal"
         />
@@ -141,7 +139,6 @@ function MyProfile ({ token }) {
             type="text"
             value={username}
             onChange={handleNameChange}
-            required
             margin="normal"
           />
 
@@ -153,7 +150,6 @@ function MyProfile ({ token }) {
             type="date"
             value={birthday}
             onChange={handleBirthdayChange}
-            required
             margin="normal"
             InputLabelProps={{
               shrink: true,
