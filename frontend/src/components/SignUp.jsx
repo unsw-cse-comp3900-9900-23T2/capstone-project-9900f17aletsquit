@@ -58,15 +58,28 @@ function SignUp () {
     navigate('/signin');
   }
 
+  function fileToDataUrl (file) {
+    const validFileTypes = ['image/jpeg', 'image/png', 'image/jpg']
+    const valid = validFileTypes.find(type => type === file.type);
+    // Bad data, let's walk away.
+    if (!valid) {
+      throw Error('provided file is not a png, jpg or jpeg image.');
+    }
+    const reader = new FileReader();
+    const dataUrlPromise = new Promise((resolve, reject) => {
+      reader.onerror = reject;
+      reader.onload = () => resolve(reader.result);
+    });
+    reader.readAsDataURL(file);
+    return dataUrlPromise;
+  }
+
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
-    const reader = new FileReader();
-
-    reader.onload = (event) => {
-      setUserimage(event.target.result);
-    };
-
-    reader.readAsDataURL(file);
+    fileToDataUrl(file).then((base64Str) => {
+      setUserimage(base64Str);
+      console.log(`:pspsps${base64Str}`);
+    })
   };
 
   const handleBirthdayChange = (e) => {
