@@ -5,6 +5,7 @@ import Rating from '@mui/material/Rating';
 function FindASpot () {
   const [carSpaces, setCarSpaces] = useState([]);
   const [userLocation, setUserLocation] = useState(null);
+  const [isGoogleMapsLoaded, setIsGoogleMapsLoaded] = useState(false);
 
   async function fetchCarSpaces () {
     const response = await fetch('http://127.0.0.1:8800/carspace/queryAll');
@@ -17,7 +18,15 @@ function FindASpot () {
   }, []);
 
   useEffect(() => {
-    loadGoogleMapsAPI().then(() => {
+    if (!isGoogleMapsLoaded) {
+      loadGoogleMapsAPI().then(() => {
+        setIsGoogleMapsLoaded(true);
+      });
+    }
+  }, [isGoogleMapsLoaded]);
+
+  useEffect(() => {
+    if (isGoogleMapsLoaded) {
       const map = new window.google.maps.Map(document.getElementById('map'), {
         zoom: 10,
       });
@@ -48,14 +57,14 @@ function FindASpot () {
           infowindow.open(map, marker);
         });
       });
-    });
-  }, [carSpaces, userLocation]);
+    }
+  }, [carSpaces, userLocation, isGoogleMapsLoaded]);
 
   async function getCoordinatesFromAddress (address) {
     try {
       const response = await fetch(
         `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
-          address
+          address.replace(/\s+/g, '+')
         )}&key=AIzaSyA-iW-2jlSRzjzw5MJxW3z9oeKS-xgPKuQ`
       );
       const data = await response.json();
@@ -75,15 +84,29 @@ function FindASpot () {
 
   const loadGoogleMapsAPI = () => {
     return new Promise((resolve, reject) => {
-      const script = document.createElement('script');
-      script.src =
-        'https://maps.googleapis.com/maps/api/js?key=AIzaSyA-iW-2jlSRzjzw5MJxW3z9oeKS-xgPKuQ&callback=initMap';
-      script.async = true;
-      script.defer = true;
-      script.onerror = reject;
-      window.initMap = resolve;
-      document.head.appendChild(script);
+      if (window.google && window.google.maps) {
+        resolve();
+      } else {
+        const script = document.createElement('script');
+        script.src =
+          'https://maps.googleapis.com/maps/api/js?key=AIzaSyA-iW-2jlSRzjzw5MJxW3z9oeKS-xgPKuQ&callback=initMap';
+        script.async = true;
+        script.defer = true;
+        script.onerror = reject;
+        window.initMap = resolve;
+        document.head.appendChild(script);
+      }
     });
+  };
+
+  const handleGeolocationSuccess = (position) => {
+    const { latitude, longitude } = position.coords;
+    setUserLocation({ lat: latitude, lng: longitude });
+  };
+
+  const handleGeolocationError = (error) => {
+    console.error('Error getting geolocation:', error.message);
+    // Handle the error gracefully
   };
 
   useEffect(() => {
@@ -96,16 +119,6 @@ function FindASpot () {
       console.error('Geolocation is not supported by this browser.');
     }
   }, []);
-
-  const handleGeolocationSuccess = (position) => {
-    const { latitude, longitude } = position.coords;
-    setUserLocation({ lat: latitude, lng: longitude });
-  };
-
-  const handleGeolocationError = (error) => {
-    console.error('Error getting geolocation:', error.message);
-    // Handle the error gracefully
-  };
 
   const getCarSpaceInfoWindowContent = (carSpace) => {
     return `
