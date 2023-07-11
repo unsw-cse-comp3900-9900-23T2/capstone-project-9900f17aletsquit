@@ -7,12 +7,6 @@ function FindASpot () {
   const [userLocation, setUserLocation] = useState(null);
   const [isGoogleMapsLoaded, setIsGoogleMapsLoaded] = useState(false);
 
-  async function fetchCarSpaces () {
-    const response = await fetch('http://127.0.0.1:8800/carspace/queryAll');
-    const data = await response.json();
-    setCarSpaces(data);
-  }
-
   useEffect(() => {
     fetchCarSpaces();
   }, []);
@@ -40,8 +34,8 @@ function FindASpot () {
         map.setCenter(userLocation);
       }
 
-      carSpaces.forEach((carSpace) => {
-        const { lat, lng } = getCoordinatesFromAddress(carSpace.address);
+      carSpaces.forEach(async (carSpace) => {
+        const { lat, lng } = await getCoordinatesFromAddress(carSpace.address);
 
         const marker = new window.google.maps.Marker({
           position: { lat, lng },
@@ -60,6 +54,16 @@ function FindASpot () {
     }
   }, [carSpaces, userLocation, isGoogleMapsLoaded]);
 
+  async function fetchCarSpaces () {
+    try {
+      const response = await fetch('http://127.0.0.1:8800/carspace/queryAll');
+      const data = await response.json();
+      setCarSpaces(data);
+    } catch (error) {
+      console.error('Error fetching car spaces:', error);
+    }
+  }
+
   async function getCoordinatesFromAddress (address) {
     try {
       const response = await fetch(
@@ -70,14 +74,14 @@ function FindASpot () {
       const data = await response.json();
 
       if (data.status === 'OK' && data.results.length > 0) {
-        const { lat, lng } = data.results[0].geometry.location;
+        const lat = data.results[0].geometry.location.lat;
+        const lng = data.results[0].geometry.location.lng;
         return { lat, lng };
       } else {
         throw new Error('Unable to geocode the address.');
       }
     } catch (error) {
-      console.error('Error:', error.message);
-      // Handle the error gracefully
+      console.error('Error geocoding address:', error);
       return null;
     }
   }
@@ -105,8 +109,7 @@ function FindASpot () {
   };
 
   const handleGeolocationError = (error) => {
-    console.error('Error getting geolocation:', error.message);
-    // Handle the error gracefully
+    console.error('Error getting geolocation:', error);
   };
 
   useEffect(() => {
@@ -124,10 +127,6 @@ function FindASpot () {
     return `
       <div>
         <Typography variant="body1">${carSpace.address}</Typography>
-        <Typography variant="body2">${carSpace.size}</Typography>
-        <Typography variant="body2">${carSpace.type}</Typography>
-        <Rating name="carSpace-rating" value={${carSpace.totalrank}} precision={0.5} readOnly />
-        <Typography variant="body2">Number of Ratings: ${carSpace.ranknum}</Typography>
         <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
           <Button variant="contained" color="primary">
             Book for ${carSpace.price}/hour
