@@ -13,7 +13,32 @@ function MyProfile ({ token }) {
   const [birthday, setBirthday] = useState('');
   const [userimage, setUserimage] = useState(null);
 
+  // const [previousEmail, setPreviousEmail] = useState('');
+  const [previousUpassword, setPreviousUpassword] = useState('');
+  const [previousUsername, setPreviousUsername] = useState('');
+  const [previousUserimage, setPreviousUserimage] = useState('');
+
   const navigate = useNavigate();
+
+  async function getProfile (token) {
+    const response = await fetch('http://127.0.0.1:8800/user/sendProfile', {
+      method: 'GET',
+      headers: {
+        token: token,
+      },
+    });
+    const data = await response.json();
+    // setPreviousEmail(data.email);
+    setPreviousUpassword(data.upassword);
+    setPreviousUsername(data.username);
+    setPreviousUserimage(data.userimage);
+    console.log(`:))))))${data.upassword}`);
+  }
+
+  // 在组件加载时调用 getProfile 函数以初始化变量的值
+  React.useEffect(() => {
+    getProfile(token);
+  }, [token]);
 
   async function editProfile () {
     console.log('123');
@@ -32,7 +57,7 @@ function MyProfile ({ token }) {
         birthday,
       }),
     });
-    navigate('/myprofile')
+    navigate('/myprofile');
   }
 
   const handleEmailChange = (e) => {
@@ -52,8 +77,8 @@ function MyProfile ({ token }) {
   };
 
   function fileToDataUrl (file) {
-    const validFileTypes = ['image/jpeg', 'image/png', 'image/jpg']
-    const valid = validFileTypes.find(type => type === file.type);
+    const validFileTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+    const valid = validFileTypes.find((type) => type === file.type);
     // Bad data, let's walk away.
     if (!valid) {
       throw Error('provided file is not a png, jpg or jpeg image.');
@@ -72,7 +97,7 @@ function MyProfile ({ token }) {
     fileToDataUrl(file).then((base64Str) => {
       setUserimage(base64Str);
       console.log(`:pspsps${base64Str}`);
-    })
+    });
   };
 
   const handleSubmit = (e) => {
@@ -100,9 +125,9 @@ function MyProfile ({ token }) {
               style={{ display: 'none' }}
             />
             <IconButton component="span">
-              {userimage
+              {previousUserimage
                 ? (
-                  <Avatar src={userimage} />
+                  <Avatar src={previousUserimage} />
                 )
                 : (
                   <AccountCircleIcon fontSize="large" />
@@ -118,6 +143,7 @@ function MyProfile ({ token }) {
           type="email"
           value={email}
           onChange={handleEmailChange}
+          placeholder="Placeholder"
           fullWidth
           margin="normal"
         />
@@ -128,17 +154,24 @@ function MyProfile ({ token }) {
           type="password"
           value={upassword}
           onChange={handlePasswordChange}
+          defaultValue={previousUpassword}
           fullWidth
           margin="normal"
         />
 
-        <Box display="flex" justifyContent="flex-start" alignItems="center" marginBottom={2}>
+        <Box
+          display="flex"
+          justifyContent="flex-start"
+          alignItems="center"
+          marginBottom={2}
+        >
           <TextField
             label="Name"
             variant="outlined"
             type="text"
             value={username}
             onChange={handleNameChange}
+            defaultValue={previousUsername}
             margin="normal"
           />
 
@@ -162,10 +195,16 @@ function MyProfile ({ token }) {
 
         <Button type="submit" variant="contained" color="primary">
           Save
-        </Button> &nbsp;&nbsp;&nbsp;
-        <Button type="submit" variant="contained" color="primary" onClick={() => {
-          navigate('/myprofile');
-        }}>
+        </Button>{' '}
+        &nbsp;&nbsp;&nbsp;
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          onClick={() => {
+            navigate('/myprofile');
+          }}
+        >
           Cancel
         </Button>
       </form>
