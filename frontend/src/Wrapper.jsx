@@ -14,6 +14,7 @@ import InviteFriend from './components/IAF/InviteFriend';
 import MyWallet from './components/MyWallet/MyWallet';
 import AdminSignIn from './components/AdminLogin';
 import ViewMyProfile from './components/MyProfile/ViewProfile';
+import AddSpot from './components/MySpot/AddSpot';
 
 function Wrapper () {
   // const [page, setPage] = React.useState('signup');
@@ -58,10 +59,11 @@ function Wrapper () {
           <Route path="/mybookings" element={<MyBookings />} />
           <Route path="/editmyprofile" element={<MyProfile token = {token}/>} />
           <Route path="/myprofile" element={<ViewMyProfile token = {token}/>} />
-          <Route path="/myspot" element={<MySpot />} />
+          <Route path="/myspot" element={<MySpot token = {token}/>} />
           <Route path="/inviteafriend" element={<InviteFriend />} />
           <Route path="/mywallet" element={<MyWallet />} />
-          <Route path="/findaspot" element={<FindASpot token = {token} />} />
+          <Route path="/findaspot" element={<FindASpot />} />
+          <Route path="/addspot" element={<AddSpot token = {token}/>} />
         </Route>
       </Routes>
     </>

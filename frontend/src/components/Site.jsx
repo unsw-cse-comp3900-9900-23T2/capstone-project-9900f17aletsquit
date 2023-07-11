@@ -44,7 +44,7 @@ function Site ({ setToken }) {
   });
 
   const icons = [DirectionsCarIcon, AccountCircleIcon, LocalParkingIcon, ViewListIcon, WalletIcon];
-  const pageName = ['Find a Spot', 'My Profile', 'My Spot', 'My Bookings', 'My wallet', 'Invite a Friend', 'Edit My Profile', 'Admin Signin'];
+  const pageName = ['Find a Spot', 'My Profile', 'My Spot', 'My Bookings', 'My wallet', 'Invite a Friend', 'Edit My Profile', 'Admin Signin', 'Add Spot'];
   let currentPageName = location.pathname.split('/').filter((part) => part !== '').join(' ');
 
   const normalizedCurrentPageName = currentPageName.toLowerCase().replace(/\s+/g, '');
