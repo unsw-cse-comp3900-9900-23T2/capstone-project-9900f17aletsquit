@@ -39,7 +39,6 @@ public class OrderController {
 
     @PostMapping("/addOrder")
     public ResponseEntity<?> addOrder(@RequestBody Order order){
-        System.out.println(order);
         int i = orderService.addOrder(order);
         if(i==0){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to add your order");

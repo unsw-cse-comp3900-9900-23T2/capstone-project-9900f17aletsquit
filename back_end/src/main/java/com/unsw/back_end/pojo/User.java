@@ -31,5 +31,7 @@ public class User implements Serializable {
 
     private Date birthday;
 
+    private String invited;
+
     private static final long serialVersionUID = 1L;
 }

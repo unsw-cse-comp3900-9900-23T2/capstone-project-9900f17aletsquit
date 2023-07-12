@@ -29,6 +29,11 @@
     where (from_time &lt;= #{fromtime,jdbcType=DATE}and to_time &gt;= #{fromtime,jdbcType=DATE})
     or (from_time &lt;= #{totime,jdbcType=DATE}and to_time &gt;= #{totime,jdbcType=DATE})
   </select>
+  <select id="selectByCustomerID" parameterType="java.lang.Integer" resultType="int">
+     select count(*)
+    from `order`
+    where customer_id = #{customerId,jdbcType=INTEGER}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from `order`
     where order_id = #{orderId,jdbcType=INTEGER}

@@ -47,7 +47,21 @@ public class OrderServiceImp implements OrderService {
         provider.setWalletExtra(new_wallet2);
         userMapper.updateByPrimaryKeySelective(customer);
         userMapper.updateByPrimaryKeySelective(provider);
-        return orderMapper.insertSelective(order);
+        int i = orderMapper.insertSelective(order);
+        int i1 = orderMapper.selectByCustomerID(order.getCustomerId());
+        if(i1==1){
+
+            User user = userMapper.selectByPrimaryKey(order.getCustomerId());
+            if(user.getInvited()!=null){
+                String invited = user.getInvited();
+                user.setWalletExtra(user.getWalletExtra()+5);
+                User invitedUser = userMapper.selectByEmail(invited);
+                invitedUser.setWalletExtra(invitedUser.getWalletExtra()+5);
+                userMapper.updateByPrimaryKeySelective(invitedUser);
+                userMapper.updateByPrimaryKeySelective(user);
+            }
+        }
+        return i;
     }
 
     @Override

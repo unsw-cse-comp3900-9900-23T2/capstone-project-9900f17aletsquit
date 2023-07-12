@@ -36,7 +36,8 @@ public class UserServiceImp implements UserService {
     public User register(User user) {
         User user1 = userMapper.selectByUsername(user.getUsername());
         User user2 = userMapper.selectByEmail(user.getEmail());
-        if(user1== null && user2 == null){
+        User user3 = userMapper.selectByEmail(user.getInvited());
+        if(user1== null && user2 == null&&user3!=null){
             int insert = userMapper.insertSelective(user);
             User result = userMapper.selectByPrimaryKey(user.getUserId());
             return result;
