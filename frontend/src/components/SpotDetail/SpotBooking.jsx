@@ -178,7 +178,7 @@ function SpotBooking ({ token }) {
               Cancel
             </Button>
           </Box>
-          {/* Current Date */}
+          {/* Current Date ez */}
           <Typography variant="body2" align="center" sx={{ marginTop: '16px' }}>
             Today Date: {today}
           </Typography>
@@ -188,5 +188,6 @@ function SpotBooking ({ token }) {
     </Grid>
   );
 }
+
 
 export default SpotBooking;
