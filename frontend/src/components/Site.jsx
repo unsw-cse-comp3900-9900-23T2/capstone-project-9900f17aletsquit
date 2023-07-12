@@ -44,13 +44,13 @@ function Site ({ setToken }) {
   });
 
   const icons = [DirectionsCarIcon, AccountCircleIcon, LocalParkingIcon, ViewListIcon, WalletIcon];
-  const pageName = ['Find a Spot', 'My Profile', 'My Spot', 'My Bookings', 'My wallet', 'Invite a Friend', 'Edit My Profile', 'Admin Signin', 'Add Spot'];
+  const pageName = ['Find a Spot', 'My Profile', 'My Spot', 'My Bookings', 'My wallet', 'Invite a Friend', 'Edit My Profile', 'Admin Signin', 'Add Spot', 'Spot Booking'];
   let currentPageName = location.pathname.split('/').filter((part) => part !== '').join(' ');
 
   const normalizedCurrentPageName = currentPageName.toLowerCase().replace(/\s+/g, '');
 
   const matchedPageName = pageName.find(name =>
-    normalizedCurrentPageName === name.toLowerCase().replace(/\s+/g, '')
+    normalizedCurrentPageName.includes(name.toLowerCase().replace(/\s+/g, ''))
   );
 
   if (matchedPageName) {

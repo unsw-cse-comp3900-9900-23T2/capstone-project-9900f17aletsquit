@@ -71,7 +71,7 @@ function MySpot ({ token }) {
               <Typography variant="body2">Number of Ratings: {carSpace.ranknum}</Typography>
 
               <Box display="flex" justifyContent="center" mt="auto">
-                <Button variant="contained" color="primary" style={{ margin: '0 10px' }}>
+                <Button variant="contained" color="primary" style={{ margin: '0 10px' }} onClick={ () => { navigate(`/myspotdetail/${carSpace.carSpaceId}`, { state: { carSpace } }); }}>
                   View Details
                 </Button>
               </Box>

@@ -1,39 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, Avatar, Box, Grid, Button, Accordion, AccordionSummary, AccordionDetails, TextField } from '@mui/material';
+import { Typography, Avatar, Box, Grid, Accordion, AccordionSummary, AccordionDetails, IconButton } from '@mui/material';
 import Rating from '@mui/material/Rating';
 import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useLocation, useNavigate } from 'react-router-dom';
+import Fab from '@mui/material/Fab';
 
-function SpotBooking ({ token }) {
+function MySpotDetail ({ token }) {
   const location = useLocation();
   const [userLocation, setUserLocation] = useState(null);
   const [distances, setDistances] = useState({});
   const carSpace = location.state?.carSpace;
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
 
   const navigate = useNavigate();
-
-  const today = new Date().toLocaleDateString();
-
-  const handleBooking = (e) => {
-    // 处理预订逻辑
-  };
-
-  const handleCancel = () => {
-    navigate('/findaspot');
-    // 处理取消逻辑
-  };
-
-  const handleStartDateChange = (event) => {
-    const date = event.target.value;
-    setStartDate(date);
-  };
-
-  const handleEndDateChange = (event) => {
-    const date = event.target.value;
-    setEndDate(date);
-  };
 
   const handleGeolocationError = (error) => {
     console.error('Error getting geolocation:', error);
@@ -114,6 +93,10 @@ function SpotBooking ({ token }) {
     return null;
   };
 
+  const handleGoBack = () => {
+    navigate('/myspot');
+  };
+
   return (
     <Grid container spacing={0} sx={{ height: '100vh' }}>
       <Grid item xs={12} sm={2} />
@@ -124,6 +107,13 @@ function SpotBooking ({ token }) {
             sx={{ width: '800px', height: '600px', marginBottom: '16px' }}
             variant="square"
           />
+          <Box sx={{ position: 'absolute', top: '10%', left: '15%' }}>
+            <IconButton color="inherit" onClick={handleGoBack}>
+              <Fab color="primary" aria-label="back">
+                <ArrowBackIcon fontSize="large" />
+              </Fab>
+            </IconButton>
+          </Box>
         </Box>
         <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', padding: '20px' }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -162,49 +152,6 @@ function SpotBooking ({ token }) {
               </Typography>
             </AccordionDetails>
           </Accordion>
-          <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: '8px' }}>
-                  <Typography variant="body2" align="center" sx={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
-                    Rental start date:&nbsp;&nbsp;
-                  </Typography>
-                  <TextField
-                    type="date"
-                    value={startDate}
-                    onChange={handleStartDateChange}
-                    variant="outlined"
-                    size="large"
-                  />
-                </Box>
-                <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: '16px' }}>
-                  <Typography variant="body2" align="center" sx={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
-                    Rental end date:&nbsp;&nbsp;&nbsp;&nbsp;
-                  </Typography>
-                  <TextField
-                    type="date"
-                    value={endDate}
-                    onChange={handleEndDateChange}
-                    variant="outlined"
-                    size="large"
-                  />
-                </Box>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%' }}>
-                  <Button variant="contained" color="primary" onClick={handleBooking} sx={{ marginTop: '16px' }}>
-                    Book for ${carSpace.price}/hr
-                  </Button>
-                  <Button variant="contained" color="error" onClick={handleCancel} sx={{ marginTop: '16px' }}>
-                    Cancel
-                  </Button>
-                </Box>
-              </Grid>
-            </Grid>
-          </Box>
-          <Typography variant="body2" align="center" sx={{ marginTop: '16px' }}>
-            Date of Today: {today}
-          </Typography>
         </Box>
       </Grid>
       <Grid item xs={12} sm={2} />
@@ -212,4 +159,4 @@ function SpotBooking ({ token }) {
   );
 }
 
-export default SpotBooking;
+export default MySpotDetail;
