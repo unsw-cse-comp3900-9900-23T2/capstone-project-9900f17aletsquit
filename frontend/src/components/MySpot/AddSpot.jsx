@@ -3,7 +3,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { IconButton, Avatar, Box, MenuItem, Select, InputLabel } from '@mui/material';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import ImageIcon from '@mui/icons-material/Image';
 import { useNavigate } from 'react-router-dom';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -105,7 +105,7 @@ function AddSpot ({ token }) {
                   <Avatar src={carspaceimage} />
                 )
                 : (
-                  <AccountCircleIcon fontSize="large" />
+                  <ImageIcon fontSize="large" />
                 )}
               <AddPhotoAlternateIcon />
             </IconButton>
