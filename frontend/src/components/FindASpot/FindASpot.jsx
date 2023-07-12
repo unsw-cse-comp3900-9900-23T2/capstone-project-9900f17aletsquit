@@ -3,6 +3,7 @@ import { Typography, Avatar, Box, Paper, Grid, Button, TextField, Divider, Selec
 import Rating from '@mui/material/Rating';
 import SearchIcon from '@mui/icons-material/Search';
 import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
+import { useNavigate } from 'react-router-dom';
 
 function FindASpot () {
   const [carSpaces, setCarSpaces] = useState([]);
@@ -11,6 +12,8 @@ function FindASpot () {
   const [searchQuery, setSearchQuery] = useState('');
   const [distances, setDistances] = useState({});
   const [sortOption, setSortOption] = useState('distance');
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchCarSpaces();
@@ -212,7 +215,9 @@ function FindASpot () {
   return (
     <Grid container spacing={0} sx={{ height: '100vh' }}>
       <Grid item xs={12} sm={2} sx={{ zIndex: 1, overflow: 'auto' }}>
+        {/* Left Sidebar */}
         <Box sx={{ padding: '20px' }}>
+          {/* Search */}
           <Typography variant="body1" sx={{ color: 'rgba(0, 0, 0, 0.6)', marginBottom: '8px' }}>
             FIND PARKING AT
           </Typography>
@@ -230,6 +235,7 @@ function FindASpot () {
           </Box>
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center', padding: '20px' }}>
+          {/* Sort By */}
           <Typography variant="body1" sx={{ color: 'rgba(0, 0, 0, 0.6)', marginRight: '8px' }}>
             Sort By:
           </Typography>
@@ -240,43 +246,51 @@ function FindASpot () {
         </Box>
         <Divider variant="middle" />
         <br />
-        {sortedCarSpaces.map((carSpace) => (
-          <Paper
-            key={carSpace.carSpaceId}
-            elevation={3}
-            sx={{
-              padding: '20px',
-              marginBottom: '20px',
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}
-          >
-            <Avatar src={carSpace.carspaceimage} sx={{ width: '120px', height: '120px' }} variant="square" />
-            <Box sx={{ marginLeft: '16px', flexGrow: 1 }}>
-              <Typography variant="h6">{carSpace.address}</Typography>
-              <Typography variant="body2">Size: {carSpace.size}</Typography>
-              <Typography variant="body2">{carSpace.type}</Typography>
-              {renderDistance(carSpace)}
-            </Box>
-            <Box>
-              <Rating
-                name={`carSpace-rating-${carSpace.carSpaceId}`}
-                value={carSpace.totalrank}
-                precision={0.5}
-                readOnly
-              />
-              <Typography variant="body2">Number of Ratings: {carSpace.ranknum}</Typography>
-              <br />
-              <Button variant="contained" color="primary">
-                Book for ${carSpace.price}/hour
-              </Button>
-            </Box>
-          </Paper>
-        ))}
+        {/* Car Spaces List */}
+        <Box sx={{ overflowY: 'auto', maxHeight: 'calc(100vh - 268px)' }}>
+          {sortedCarSpaces.map((carSpace) => (
+            <Paper
+              key={carSpace.carSpaceId}
+              elevation={3}
+              sx={{
+                padding: '20px',
+                marginBottom: '20px',
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}
+            >
+              {/* Car Space Image */}
+              <Avatar src={carSpace.carspaceimage} sx={{ width: '120px', height: '120px' }} variant="square" />
+              <Box sx={{ marginLeft: '16px', flexGrow: 1 }}>
+                {/* Car Space Details */}
+                <Typography variant="h6">{carSpace.address}</Typography>
+                <Typography variant="body2">Size: {carSpace.size}</Typography>
+                <Typography variant="body2">{carSpace.type}</Typography>
+                {renderDistance(carSpace)}
+              </Box>
+              <Box>
+                {/* Car Space Ratings */}
+                <Rating
+                  name={`carSpace-rating-${carSpace.carSpaceId}`}
+                  value={carSpace.totalrank}
+                  precision={0.5}
+                  readOnly
+                />
+                <Typography variant="body2">Number of Ratings: {carSpace.ranknum}</Typography>
+                <br />
+                {/* Book Button */}
+                <Button variant="contained" color="primary" onClick={() => { navigate(`/spotbooking/${carSpace.carSpaceId}`, { state: { carSpace } }); }}>
+                  Book for ${carSpace.price}/hour
+                </Button>
+              </Box>
+            </Paper>
+          ))}
+        </Box>
       </Grid>
       <Grid item xs={12} sm={10}>
-        <div id="map" style={{ width: '100%', height: '100%' }} />
+        {/* Map */}
+        <div id="map" style={{ width: '100%', height: 'calc(100vh - 64px)' }} />
       </Grid>
     </Grid>
   );
