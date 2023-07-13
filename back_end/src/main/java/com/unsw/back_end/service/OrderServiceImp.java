@@ -11,8 +11,11 @@ import com.unsw.back_end.pojo.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.LinkedList;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.*;
 
 @Service
 public class OrderServiceImp implements OrderService {
@@ -123,5 +126,29 @@ public class OrderServiceImp implements OrderService {
         }
 
     }
+
+    @Override
+    public List<String> returnDate(LocalDate curtime) {
+        LinkedList<Map> maps = orderMapper.returnDateBycarspaceid(curtime);
+        SimpleDateFormat inputFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+        SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
+        List<String> allDates = new ArrayList<>();
+        for(int i = 0; i<maps.size();i++){
+            Object[] objects = maps.get(i).values().toArray();
+            Date to_time = (Date)objects[0];
+            Date from_time = (Date)objects[1];
+            long timestampDiff = to_time.getTime() - from_time.getTime();
+            long daysBetween = timestampDiff / (24 * 60 * 60 * 1000);
+            long oneDayMillis = 24 * 60 * 60 * 1000;
+            for (int l = 0; l <= daysBetween; l++) {
+                Date currentDate = new Date(from_time.getTime() + l * oneDayMillis);
+                String formattedDate = outputFormat.format(currentDate);
+                allDates.add(formattedDate);
+            }
+        }
+        return allDates;
+    }
+
+
 
 }

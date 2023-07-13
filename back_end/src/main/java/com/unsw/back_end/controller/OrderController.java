@@ -12,6 +12,9 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -71,6 +74,13 @@ public class OrderController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Sorry,it's too late to delete it.");
         }
         return ResponseEntity.ok("Delete your order success.");
+    }
+
+    @GetMapping("/returnreserveddateofsingle")
+    public ResponseEntity<?> returnreserveddateofsingle(@RequestParam("carspaceid")Integer carspaceid) throws ParseException {
+        LocalDate currentDate = LocalDate.now();
+        List<String> strings = orderService.returnDate(currentDate);
+        return ResponseEntity.ok(strings);
     }
 
 }

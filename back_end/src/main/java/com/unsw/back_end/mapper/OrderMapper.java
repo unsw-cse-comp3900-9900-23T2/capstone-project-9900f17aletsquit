@@ -2,8 +2,10 @@ package com.unsw.back_end.mapper;
 
 import com.unsw.back_end.pojo.Order;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.Map;
 
 public interface OrderMapper {
     int deleteByPrimaryKey(Integer orderId);
@@ -21,4 +23,6 @@ public interface OrderMapper {
     LinkedList<Order> dateSearch(Integer carspaceid, Date fromtime, Date totime);
 
     int selectByCustomerID(Integer customerId);
+
+    LinkedList<Map> returnDateBycarspaceid(LocalDate curtime);
 }
