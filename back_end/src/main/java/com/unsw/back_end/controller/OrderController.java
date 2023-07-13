@@ -25,12 +25,12 @@ public class OrderController {
     OrderService orderService;
 
     @GetMapping("/dateSearch")
-    public ResponseEntity<?> dateSearch(@RequestParam("fromtime")String fromtime, @RequestParam("totime")String totime) throws ParseException {
+    public ResponseEntity<?> dateSearch(@RequestParam("carspaceid")Integer carspaceid,@RequestParam("fromtime")String fromtime, @RequestParam("totime")String totime) throws ParseException {
         String pattern = "yyyy-MM-dd";
         SimpleDateFormat sdf = new SimpleDateFormat(pattern);
         Date fromdate = sdf.parse(fromtime);
         Date todate = sdf.parse(totime);
-        int i = orderService.dateSearch(fromdate, todate);
+        int i = orderService.dateSearch(carspaceid,fromdate, todate);
         if (i==0){
             return ResponseEntity.ok("The date and time of your application are reasonable.");
         }

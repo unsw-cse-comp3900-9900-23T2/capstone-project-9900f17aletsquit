@@ -1,6 +1,7 @@
 package com.unsw.back_end.service;
 
 import com.unsw.back_end.mapper.CarspaceMapper;
+import com.unsw.back_end.mapper.CommentofcarspaceMapper;
 import com.unsw.back_end.pojo.Carspace;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -15,6 +16,9 @@ import java.util.List;
 public class CarSpaceServiceImp implements CarSpaceService {
     @Autowired
     CarspaceMapper carspaceMapper;
+
+    @Autowired
+    CommentofcarspaceMapper commentofcarspaceMapper;
 
     @Override
     @CachePut(key = "#result.carSpaceId",value = "myCarSpace",condition = "#result!=null")
@@ -89,6 +93,11 @@ public class CarSpaceServiceImp implements CarSpaceService {
             default:
                 return null;
         }
+    }
+
+    @Override
+    public LinkedList<String> queryAllCommentForSingleCarSpace(int carspaceid) {
+        return commentofcarspaceMapper.selectAllComment(carspaceid);
     }
 
 

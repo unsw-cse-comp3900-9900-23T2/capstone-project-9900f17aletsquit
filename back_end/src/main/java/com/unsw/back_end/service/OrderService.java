@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.LinkedList;
 
 public interface OrderService {
-    public int dateSearch(Date fromtime,Date totime);
+    public int dateSearch(Integer carspaceid, Date fromtime,Date totime);
 
     public int addOrder(Order order);
 

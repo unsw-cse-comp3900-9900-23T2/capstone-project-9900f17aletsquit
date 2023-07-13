@@ -71,4 +71,9 @@ public class CarSpaceController {
     public ResponseEntity<?> queryByAddressAndOrder(@RequestHeader("order") String orderValue, @RequestParam("city") String cityname, @RequestParam("suburb") String suburbname, @RequestParam("street") String streetname) {
         return ResponseEntity.ok(carSpaceService.queryByAddressAndOrder(cityname,suburbname,streetname, Integer.parseInt(orderValue)));
     }
+
+    @GetMapping("/searchAllComment/{carspaceid}")
+    public ResponseEntity<?> searchAllCommentforSingle(@PathVariable("carspaceid") Integer carspaceid) {
+        return ResponseEntity.ok(carSpaceService.queryAllCommentForSingleCarSpace(carspaceid));
+    }
 }

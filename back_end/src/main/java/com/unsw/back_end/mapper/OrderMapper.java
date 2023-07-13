@@ -18,7 +18,7 @@ public interface OrderMapper {
 
     int updateByPrimaryKey(Order record);
 
-    LinkedList<Order> dateSearch(Date fromtime, Date totime);
+    LinkedList<Order> dateSearch(Integer carspaceid, Date fromtime, Date totime);
 
     int selectByCustomerID(Integer customerId);
 }

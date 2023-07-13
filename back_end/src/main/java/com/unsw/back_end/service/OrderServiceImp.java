@@ -1,9 +1,11 @@
 package com.unsw.back_end.service;
 
 import com.unsw.back_end.mapper.CarspaceMapper;
+import com.unsw.back_end.mapper.CommentofcarspaceMapper;
 import com.unsw.back_end.mapper.OrderMapper;
 import com.unsw.back_end.mapper.UserMapper;
 import com.unsw.back_end.pojo.Carspace;
+import com.unsw.back_end.pojo.Commentofcarspace;
 import com.unsw.back_end.pojo.Order;
 import com.unsw.back_end.pojo.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +22,11 @@ public class OrderServiceImp implements OrderService {
     CarspaceMapper carspaceMapper;
     @Autowired
     UserMapper userMapper;
+    @Autowired
+    CommentofcarspaceMapper commentofcarspaceMapper;
     @Override
-    public int dateSearch(Date fromtime, Date totime) {
-        LinkedList<Order> orders = orderMapper.dateSearch(fromtime, totime);
+    public int dateSearch(Integer carspaceid, Date fromtime, Date totime) {
+        LinkedList<Order> orders = orderMapper.dateSearch(carspaceid,fromtime, totime);
         if(orders.size()==0){
             return 0;
         }
@@ -77,19 +81,16 @@ public class OrderServiceImp implements OrderService {
         if(date.compareTo(fromTime)>=0){
             Carspace carspace = carspaceMapper.selectByPrimaryKey(order1.getCarSpaceId());
             Integer ranknum = carspace.getRanknum();
-            Double totalrank = carspace.getTotalrank();
-            String curcomment = carspace.getCurcomment();
+            Double totalrank = carspace.getTotalrank()*ranknum;
             String historyComment = order.getHistoryComment();
             Double new_rank = (totalrank+order.getCurRank())/(ranknum+1);
-            if(curcomment!=null&&curcomment.length()+historyComment.length()>30000){
-                return 3;
-            }else {
-                String new_comment = historyComment+curcomment;
-                carspace.setCurcomment(new_comment);
-                carspace.setRanknum(ranknum+1);
-                carspace.setTotalrank(new_rank);
-                carspaceMapper.updateByPrimaryKeySelective(carspace);
-            }
+            carspace.setRanknum(ranknum+1);
+            carspace.setTotalrank(new_rank);
+            Commentofcarspace commentofcarspace = new Commentofcarspace();
+            commentofcarspace.setCarspaceid(carspace.getCarSpaceId());
+            commentofcarspace.setComment(historyComment);
+            commentofcarspaceMapper.insert(commentofcarspace);
+            carspaceMapper.updateByPrimaryKeySelective(carspace);
             return orderMapper.updateByPrimaryKeySelective(order);
         }else {
             return 0;

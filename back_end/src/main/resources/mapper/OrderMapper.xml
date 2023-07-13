@@ -22,12 +22,12 @@
     from `order`
     where order_id = #{orderId,jdbcType=INTEGER}
   </select>
-  <select id="dateSearch" parameterType="java.util.Date" resultMap="BaseResultMap">
+  <select id="dateSearch" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from `order`
-    where (from_time &lt;= #{fromtime,jdbcType=DATE}and to_time &gt;= #{fromtime,jdbcType=DATE})
-    or (from_time &lt;= #{totime,jdbcType=DATE}and to_time &gt;= #{totime,jdbcType=DATE})
+    where car_space_id = #{carspaceid} and ((from_time &lt;= #{fromtime} and to_time &gt;= #{fromtime})
+    or (from_time &lt;= #{totime} and to_time &gt;= #{totime}))
   </select>
   <select id="selectByCustomerID" parameterType="java.lang.Integer" resultType="int">
      select count(*)

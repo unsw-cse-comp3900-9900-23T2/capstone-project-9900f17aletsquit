@@ -20,4 +20,6 @@ public interface CarSpaceService {
 
     public LinkedList<Carspace> queryByAddressAndOrder(String city, String suburb, String street, int orderValue);
 
+    public LinkedList<String> queryAllCommentForSingleCarSpace(int carspaceid);
+
 }
