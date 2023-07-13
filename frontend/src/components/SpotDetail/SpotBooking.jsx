@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, Avatar, Box, Grid, Button, Accordion, AccordionSummary, AccordionDetails, TextField } from '@mui/material';
+import { Typography, Avatar, Box, Grid, Button, Accordion, AccordionSummary, AccordionDetails, TextField, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import Rating from '@mui/material/Rating';
 import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -11,18 +11,63 @@ function SpotBooking ({ token }) {
   const carSpace = location.state?.carSpace;
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [openDialog, setOpenDialog] = useState(false); // Dialog state
+  const [totalDays, setTotalDays] = useState(0); // Total rental days state
 
   const navigate = useNavigate();
+  const providerId = carSpace.userId;
+  const carSpaceid = carSpace.carSpaceId;
+  const tprice = totalDays * carSpace.price;
+  const customerId = parseInt(token, 10);
 
   const today = new Date().toLocaleDateString();
 
   const handleBooking = (e) => {
-    // 处理预订逻辑
+    if (!startDate || !endDate) {
+      alert('Please select both start and end dates.');
+      return;
+    }
+
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+
+    if (end < start) {
+      alert('End date cannot be earlier than start date.');
+      return;
+    }
+
+    setOpenDialog(true); // Open the dialog when booking button is clicked
+    const totalDays = Math.floor((end - start) / (1000 * 60 * 60 * 24)) + 1;
+    setTotalDays(totalDays); // Calculate and set the total number of days
   };
+
+  async function confirmBooking () {
+    console.log(startDate,
+      endDate,
+      customerId,
+      providerId,
+      carSpaceid,
+      tprice);
+    await fetch('http://127.0.0.1:8800/order/addOrder', {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        startDate,
+        endDate,
+        customerId,
+        providerId,
+        carSpaceid,
+        tprice,
+      }),
+    });
+    alert('Booked successfilly!');
+  }
 
   const handleCancel = () => {
     navigate('/findaspot');
-    // 处理取消逻辑
+    // Handle cancel logic
   };
 
   const handleStartDateChange = (event) => {
@@ -33,6 +78,16 @@ function SpotBooking ({ token }) {
   const handleEndDateChange = (event) => {
     const date = event.target.value;
     setEndDate(date);
+  };
+
+  const handleDialogClose = () => {
+    setOpenDialog(false); // Close the dialog when the close button is clicked
+  };
+
+  const handleDialogConfirm = () => {
+    confirmBooking();
+    // Handle confirm logic, e.g., make API call to book the spot
+    setOpenDialog(false); // Close the dialog after confirming
   };
 
   const handleGeolocationError = (error) => {
@@ -67,7 +122,10 @@ function SpotBooking ({ token }) {
 
   useEffect(() => {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(handleGeolocationSuccess, handleGeolocationError);
+      navigator.geolocation.getCurrentPosition(
+        handleGeolocationSuccess,
+        handleGeolocationError
+      );
     } else {
       console.error('Geolocation is not supported by this browser.');
     }
@@ -79,7 +137,10 @@ function SpotBooking ({ token }) {
     const dLng = ((lng2 - lng1) * Math.PI) / 180;
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+      Math.cos((lat1 * Math.PI) / 180) *
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLng / 2) *
+        Math.sin(dLng / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = R * c;
     return distance.toFixed(2); // Return distance in kilometers with 2 decimal places
@@ -90,9 +151,16 @@ function SpotBooking ({ token }) {
       if (userLocation) {
         const updatedDistances = {};
         const { lat: userLat, lng: userLng } = userLocation;
-        const { lat: carLat, lng: carLng } = await getCoordinatesFromAddress(carSpace.address);
+        const { lat: carLat, lng: carLng } = await getCoordinatesFromAddress(
+          carSpace.address
+        );
         if (carLat && carLng) {
-          const distance = calculateDistance(userLat, userLng, carLat, carLng);
+          const distance = calculateDistance(
+            userLat,
+            userLng,
+            carLat,
+            carLng
+          );
           updatedDistances[carSpace.carSpaceId] = distance;
         }
         setDistances(updatedDistances);
@@ -105,9 +173,22 @@ function SpotBooking ({ token }) {
     const distance = distances[carSpace.carSpaceId];
     if (distance) {
       return (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <DirectionsRunIcon sx={{ color: 'rgba(0, 0, 0, 0.6)', marginRight: '4px', fontSize: '2.0rem' }} />
-          <Typography variant="body2" sx={{ fontSize: '1.5rem' }}>{distance} km away</Typography>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
+          <DirectionsRunIcon
+            sx={{
+              color: 'rgba(0, 0, 0, 0.6)',
+              marginRight: '4px',
+              fontSize: '2.0rem',
+            }}
+          />
+          <Typography variant="body2" sx={{ fontSize: '1.5rem' }}>
+            {distance} km away
+          </Typography>
         </Box>
       );
     }
@@ -118,21 +199,47 @@ function SpotBooking ({ token }) {
     <Grid container spacing={0} sx={{ height: '100vh' }}>
       <Grid item xs={12} sm={2} />
       <Grid item xs={12} sm={8}>
-        <Box display="flex" justifyContent="center" alignItems="center" height="50%">
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          height="60%"
+        >
           <Avatar
             src={carSpace.carspaceimage}
-            sx={{ width: '800px', height: '600px', marginBottom: '16px' }}
+            sx={{
+              width: '800px',
+              height: '600px',
+              marginBottom: '16px',
+            }}
             variant="square"
           />
         </Box>
-        <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', padding: '20px' }}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Typography variant="h3">
-              {carSpace.address}
-            </Typography>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            width: '100%',
+            padding: '20px',
+          }}
+        >
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+            }}
+          >
+            <Typography variant="h3">{carSpace.address}</Typography>
             {renderDistance()}
           </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginTop: '8px' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'flex-end',
+              marginTop: '8px',
+            }}
+          >
             <Rating
               name={`carSpace-rating-${carSpace.carSpaceId}`}
               value={carSpace.totalrank}
@@ -141,32 +248,61 @@ function SpotBooking ({ token }) {
               sx={{ fontSize: '2.5rem' }}
             />
           </Box>
-          <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+          <Typography
+            variant="body2"
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'flex-end',
+            }}
+          >
             Number of Ratings: {carSpace.ranknum}
           </Typography>
-          <Typography variant="body1">
-            Size: {carSpace.size}
-          </Typography>
-          <Typography variant="body1">
-            {carSpace.type}
-          </Typography>
+          <Typography variant="body1">Size: {carSpace.size}</Typography>
+          <Typography variant="body1">{carSpace.type}</Typography>
           <Accordion sx={{ marginTop: '16px' }}>
             <AccordionSummary>
-              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+              <Typography
+                variant="body2"
+                sx={{ fontWeight: 'bold' }}
+              >
                 Comments
               </Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
+              <Typography
+                variant="body2"
+                sx={{ fontStyle: 'italic' }}
+              >
                 {carSpace.curcomment}
               </Typography>
             </AccordionDetails>
           </Accordion>
-          <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              marginTop: '16px',
+            }}
+          >
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
-                <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: '8px' }}>
-                  <Typography variant="body2" align="center" sx={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    marginTop: '8px',
+                  }}
+                >
+                  <Typography
+                    variant="body2"
+                    align="center"
+                    sx={{
+                      fontSize: '1.2rem',
+                      fontWeight: 'bold',
+                    }}
+                  >
                     Rental start date:&nbsp;&nbsp;
                   </Typography>
                   <TextField
@@ -177,8 +313,22 @@ function SpotBooking ({ token }) {
                     size="large"
                   />
                 </Box>
-                <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: '16px' }}>
-                  <Typography variant="body2" align="center" sx={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    marginTop: '16px',
+                  }}
+                >
+                  <Typography
+                    variant="body2"
+                    align="center"
+                    sx={{
+                      fontSize: '1.2rem',
+                      fontWeight: 'bold',
+                    }}
+                  >
                     Rental end date:&nbsp;&nbsp;&nbsp;&nbsp;
                   </Typography>
                   <TextField
@@ -191,23 +341,69 @@ function SpotBooking ({ token }) {
                 </Box>
               </Grid>
               <Grid item xs={12} sm={6}>
-                <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%' }}>
-                  <Button variant="contained" color="primary" onClick={handleBooking} sx={{ marginTop: '16px' }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    height: '100%',
+                  }}
+                >
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleBooking}
+                    sx={{ marginTop: '16px' }}
+                  >
                     Book for ${carSpace.price}/hr
                   </Button>
-                  <Button variant="contained" color="error" onClick={handleCancel} sx={{ marginTop: '16px' }}>
+                  <Button
+                    variant="contained"
+                    color="error"
+                    onClick={handleCancel}
+                    sx={{ marginTop: '16px' }}
+                  >
                     Cancel
                   </Button>
                 </Box>
               </Grid>
             </Grid>
           </Box>
-          <Typography variant="body2" align="center" sx={{ marginTop: '16px' }}>
+          <Typography
+            variant="body2"
+            align="center"
+            sx={{ marginTop: '16px' }}
+          >
             Date of Today: {today}
           </Typography>
         </Box>
       </Grid>
       <Grid item xs={12} sm={2} />
+      <Dialog open={openDialog} onClose={handleDialogClose}>
+        <DialogTitle>Booking Details</DialogTitle>
+        <DialogContent>
+          <Typography>
+            Rental start date: {startDate}
+          </Typography>
+          <Typography>
+            Rental end date: {endDate}
+          </Typography>
+          <Typography>
+            Total days: {totalDays}
+          </Typography>
+          <Typography>
+            Total price: ${totalDays * carSpace.price}
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDialogConfirm} color="primary">
+            Confirm
+          </Button>
+          <Button onClick={handleDialogClose} color="primary" autoFocus>
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Grid>
   );
 }
