@@ -8,12 +8,13 @@ function MyWallet ({ token }) {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [userImage, setUserImage] = useState('');
-  const [walletExtra, setWalletExtra] = useState(0.0);
+  const [walletExtra1, setWalletExtra1] = useState(0.0);
   const [cardNumber, setCardNumber] = useState('');
   const [cardName, setCardName] = useState('');
   const [ccv, setCcv] = useState('');
+  const [topup, setTopup] = useState('');
 
-  async function getProfile (token) {
+  async function getProfile () {
     const response = await fetch('http://127.0.0.1:8800/user/sendProfile', {
       method: 'GET',
       headers: {
@@ -24,17 +25,35 @@ function MyWallet ({ token }) {
     setEmail(data.email);
     setUsername(data.username);
     setUserImage(data.userimage);
-    setWalletExtra(parseFloat(data.walletExtra));
+    setWalletExtra1(parseFloat(data.walletExtra));
   }
 
   React.useEffect(() => {
     getProfile(token);
   }, [token]);
 
+  const topup1 = parseInt(topup, 10);
+  const walletExtra = topup1 + walletExtra1;
+
+  async function recharge () {
+    console.log(topup1);
+    console.log(walletExtra1);
+    await fetch('http://127.0.0.1:8800/user/editProfile', {
+      method: 'PUT',
+      headers: {
+        token: token,
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        walletExtra,
+      }),
+    });
+  }
+
   const handleRecharge = () => {
+    recharge();
     // Perform the recharge logic here
     // You can access the cardNumber, cardName, and ccv values to process the recharge
-    console.log('Recharge button clicked');
   };
 
   const validateCardNumber = (value) => {
@@ -79,7 +98,7 @@ function MyWallet ({ token }) {
               <AccountBalanceWalletIcon />
             </Grid>
             <Grid item xs={11}>
-              <Typography variant="body1"> You have {walletExtra} remaining.</Typography>
+              <Typography variant="body1"> You have {walletExtra1} remaining.</Typography>
             </Grid>
           </Grid>
         </Box>
@@ -87,6 +106,12 @@ function MyWallet ({ token }) {
         <Box flex="1" marginLeft={2}>
           <Box display="flex" flexDirection="column" alignItems="center" marginBottom={2}>
             <Typography variant="h6">Recharge Wallet</Typography>
+            <TextField
+              label="$"
+              value={topup}
+              onChange={(e) => setTopup(e.target.value)}
+              margin="normal"
+            />
             <TextField
               label="Card Number"
               value={cardNumber}

@@ -101,7 +101,7 @@ function MySpotDetail ({ token }) {
     <Grid container spacing={0} sx={{ height: '100vh' }}>
       <Grid item xs={12} sm={2} />
       <Grid item xs={12} sm={8}>
-        <Box display="flex" justifyContent="center" alignItems="center" height="50%">
+        <Box display="flex" justifyContent="center" alignItems="center" height="70%">
           <Avatar
             src={carSpace.carspaceimage}
             sx={{ width: '800px', height: '600px', marginBottom: '16px' }}
