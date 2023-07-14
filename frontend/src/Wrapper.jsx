@@ -63,7 +63,7 @@ function Wrapper () {
           <Route path="/myprofile" element={<ViewMyProfile token = {token}/>} />
           <Route path="/myspot" element={<MySpot token = {token}/>} />
           <Route path="/inviteafriend" element={<InviteFriend />} />
-          <Route path="/mywallet" element={<MyWallet />} />
+          <Route path="/mywallet" element={<MyWallet token = {token}/>} />
           <Route path="/findaspot" element={<FindASpot />} />
           <Route path="/addspot" element={<AddSpot token = {token}/>} />
           <Route path="/spotbooking/:carSpaceId" element={<SpotBooking token = {token}/>} />
