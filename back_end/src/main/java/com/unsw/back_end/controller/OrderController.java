@@ -79,7 +79,7 @@ public class OrderController {
     @GetMapping("/returnreserveddateofsingle")
     public ResponseEntity<?> returnreserveddateofsingle(@RequestParam("carspaceid")Integer carspaceid) throws ParseException {
         LocalDate currentDate = LocalDate.now();
-        List<String> strings = orderService.returnDate(currentDate);
+        List<String> strings = orderService.returnDate(currentDate,carspaceid);
         return ResponseEntity.ok(strings);
     }
 

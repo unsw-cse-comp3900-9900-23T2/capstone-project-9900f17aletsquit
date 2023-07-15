@@ -38,7 +38,7 @@
     select
     from_time, to_time
     from `order`
-    where from_time &gt;= #{curtime,jdbcType=DATE}
+    where from_time &gt;= #{curtime,jdbcType=DATE} and car_space_id = #{carspaceId,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from `order`
