@@ -67,7 +67,7 @@ function Wrapper () {
           <Route path="/findaspot" element={<FindASpot />} />
           <Route path="/addspot" element={<AddSpot token = {token}/>} />
           <Route path="/spotbooking/:carSpaceId" element={<SpotBooking token = {token}/>} />
-          <Route path="/myspotdetail/:carSpaceId" element={<MySpotDetail token = {token}/>} />
+          <Route path="/myspotdetail/:carSpaceId" element={<MySpotDetail />} />
         </Route>
       </Routes>
     </>

@@ -11,8 +11,13 @@ function MyWallet ({ token }) {
   const [walletExtra1, setWalletExtra1] = useState(0.0);
   const [cardNumber, setCardNumber] = useState('');
   const [cardName, setCardName] = useState('');
+  const [expiryDate, setExpiryDate] = useState('');
   const [ccv, setCcv] = useState('');
   const [topup, setTopup] = useState('');
+  const [cardNumberError, setCardNumberError] = useState(false);
+  const [cardNameError, setCardNameError] = useState(false);
+  const [expiryDateError, setExpiryDateError] = useState(false);
+  const [ccvError, setCcvError] = useState(false);
 
   async function getProfile () {
     const response = await fetch('http://127.0.0.1:8800/user/sendProfile', {
@@ -36,8 +41,6 @@ function MyWallet ({ token }) {
   const walletExtra = topup1 + walletExtra1;
 
   async function recharge () {
-    console.log(topup1);
-    console.log(walletExtra1);
     await fetch('http://127.0.0.1:8800/user/editProfile', {
       method: 'PUT',
       headers: {
@@ -48,12 +51,45 @@ function MyWallet ({ token }) {
         walletExtra,
       }),
     });
+    getProfile(token);
   }
 
   const handleRecharge = () => {
-    recharge();
-    // Perform the recharge logic here
-    // You can access the cardNumber, cardName, and ccv values to process the recharge
+    let hasError = false;
+
+    if (!cardNumber || !cardNumber.match(/^\d{4}\s\d{4}\s\d{4}\s\d{4}$/)) {
+      setCardNumberError(true);
+      hasError = true;
+    } else {
+      setCardNumberError(false);
+    }
+
+    if (!cardName || !cardName.match(/^[a-zA-Z\s]+$/)) {
+      setCardNameError(true);
+      hasError = true;
+    } else {
+      setCardNameError(false);
+    }
+
+    if (!expiryDate || !expiryDate.match(/^(0[1-9]|1[0-2])\/\d{2}$/)) {
+      setExpiryDateError(true);
+      hasError = true;
+    } else {
+      setExpiryDateError(false);
+    }
+
+    if (!ccv || !ccv.match(/^\d{3}$/)) {
+      setCcvError(true);
+      hasError = true;
+    } else {
+      setCcvError(false);
+    }
+
+    if (!hasError) {
+      recharge();
+      // Perform the recharge logic here
+      // You can access the cardNumber, cardName, expiryDate, and ccv values to process the recharge
+    }
   };
 
   const validateCardNumber = (value) => {
@@ -64,6 +100,22 @@ function MyWallet ({ token }) {
     }
     formattedValue = formattedValue.trim(); // Remove trailing space
     setCardNumber(formattedValue);
+  };
+
+  const handleExpiryDateChange = (value) => {
+    const numericValue = value.replace(/\D/g, ''); // Remove non-digit characters
+
+    let formattedValue = '';
+
+    if (numericValue.length > 0) {
+      formattedValue = numericValue.slice(0, 2); // Extract first two digits (MM)
+
+      if (numericValue.length > 2) {
+        formattedValue += '/' + numericValue.slice(2, 4); // Add '/' and next two digits (YY)
+      }
+    }
+
+    setExpiryDate(formattedValue);
   };
 
   const validateCCV = (value) => {
@@ -118,12 +170,25 @@ function MyWallet ({ token }) {
               onChange={(e) => validateCardNumber(e.target.value)}
               inputProps={{ maxLength: 19 }} // Increased the maximum length to accommodate spaces
               margin="normal"
+              error={cardNumberError}
+              helperText={cardNumberError && 'Invalid card number'}
             />
             <TextField
               label="Account Name"
               value={cardName}
               onChange={(e) => setCardName(e.target.value)}
               margin="normal"
+              error={cardNameError}
+              helperText={cardNameError && 'Invalid account name'}
+            />
+            <TextField
+              label="Expiry Date"
+              value={expiryDate}
+              onChange={(e) => handleExpiryDateChange(e.target.value)}
+              inputProps={{ maxLength: 5 }} // Maximum length of 5 (MM/YY format)
+              margin="normal"
+              error={expiryDateError}
+              helperText={expiryDateError && 'Invalid expiry date (MM/YY)'}
             />
             <TextField
               label="CCV"
@@ -131,8 +196,11 @@ function MyWallet ({ token }) {
               onChange={(e) => validateCCV(e.target.value)}
               inputProps={{ maxLength: 3 }}
               margin="normal"
+              error={ccvError}
+              helperText={ccvError && 'Invalid CCV'}
             />
-            <Button variant="contained" color="primary" onClick={handleRecharge} marginTop={2}>
+            <br />
+            <Button variant="contained" color="primary" onClick={handleRecharge}>
               Confirm Recharge
             </Button>
           </Box>
