@@ -187,7 +187,7 @@ function FindASpot () {
     const distance = distances[carSpace.carSpaceId];
     if (distance) {
       return (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
           <DirectionsRunIcon sx={{ color: 'rgba(0, 0, 0, 0.6)', marginRight: '4px' }} />
           <Typography variant="body2">{distance} km away</Typography>
         </Box>
@@ -214,9 +214,9 @@ function FindASpot () {
 
   return (
     <Grid container spacing={0} sx={{ height: '100vh' }}>
-      <Grid item xs={12} sm={2} sx={{ zIndex: 1, overflow: 'auto' }}>
+      <Grid item xs={12} sm={5} md={4} lg={3} sx={{ zIndex: 1, overflow: 'auto', maxHeight: '100vh' }}>
         {/* Left Sidebar */}
-        <Box sx={{ padding: '20px' }}>
+        <Box sx={{ padding: '20px', height: '100%' }}>
           {/* Search */}
           <Typography variant="body1" sx={{ color: 'rgba(0, 0, 0, 0.6)', marginBottom: '8px' }}>
             FIND PARKING AT
@@ -233,64 +233,76 @@ function FindASpot () {
               margin="dense"
             />
           </Box>
-        </Box>
-        <Box sx={{ display: 'flex', alignItems: 'center', padding: '20px' }}>
-          {/* Sort By */}
-          <Typography variant="body1" sx={{ color: 'rgba(0, 0, 0, 0.6)', marginRight: '8px' }}>
-            Sort By:
-          </Typography>
-          <Select value={sortOption} onChange={handleSortChange} variant="outlined" size="small">
-            <MenuItem value="distance">Distance</MenuItem>
-            <MenuItem value="price">Price</MenuItem>
-          </Select>
-        </Box>
-        <Divider variant="middle" />
-        <br />
-        {/* Car Spaces List */}
-        <Box sx={{ overflowY: 'auto', maxHeight: 'calc(100vh - 268px)' }}>
-          {sortedCarSpaces.map((carSpace) => (
-            <Paper
-              key={carSpace.carSpaceId}
-              elevation={3}
-              sx={{
-                padding: '20px',
-                marginBottom: '20px',
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}
-            >
-              {/* Car Space Image */}
-              <Avatar src={carSpace.carspaceimage} sx={{ width: '120px', height: '120px' }} variant="square" />
-              <Box sx={{ marginLeft: '16px', flexGrow: 1 }}>
-                {/* Car Space Details */}
-                <Typography variant="h6">{carSpace.address}</Typography>
-                <Typography variant="body2">Size: {carSpace.size}</Typography>
-                <Typography variant="body2">{carSpace.type}</Typography>
-                {renderDistance(carSpace)}
-              </Box>
-              <Box>
-                {/* Car Space Ratings */}
-                <Rating
-                  name={`carSpace-rating-${carSpace.carSpaceId}`}
-                  value={carSpace.totalrank}
-                  precision={0.5}
-                  readOnly
-                />
-                <Typography variant="body2">Number of Ratings: {carSpace.ranknum}</Typography>
-                <br />
-                {/* Book Button */}
-                <Button variant="contained" color="primary" onClick={() => { navigate(`/spotbooking/${carSpace.carSpaceId}`, { state: { carSpace } }); }}>
-                  Book for ${carSpace.price}/hour
-                </Button>
-              </Box>
-            </Paper>
-          ))}
+          <Divider variant="middle" sx={{ marginY: '20px' }} />
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            {/* Sort By */}
+            <Typography variant="body1" sx={{ color: 'rgba(0, 0, 0, 0.6)', marginRight: '8px' }}>
+              Sort By:
+            </Typography>
+            <Select value={sortOption} onChange={handleSortChange} variant="outlined" size="small">
+              <MenuItem value="distance">Distance</MenuItem>
+              <MenuItem value="price">Price</MenuItem>
+            </Select>
+          </Box>
+          {/* Car Spaces List */}
+          <Box sx={{ overflowY: 'auto', maxHeight: 'calc(100vh - 268px)', marginTop: '20px' }}>
+            {sortedCarSpaces.map((carSpace) => (
+              <Paper
+                key={carSpace.carSpaceId}
+                elevation={3}
+                sx={{
+                  padding: '20px',
+                  marginBottom: '20px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                }}
+              >
+                {/* Car Space Image */}
+                <Avatar src={carSpace.carspaceimage} sx={{ width: '120px', height: '120px' }} variant="square" />
+                <Box sx={{ marginTop: '16px', flexGrow: 1, width: '100%' }}>
+                  {/* Car Space Details */}
+                  <Typography variant="h6" sx={{ textAlign: 'center' }}>
+                    {carSpace.address}
+                  </Typography>
+                  <Typography variant="body2" sx={{ textAlign: 'center', marginBottom: '8px' }}>
+                    Size: {carSpace.size}
+                  </Typography>
+                  <Typography variant="body2" sx={{ textAlign: 'center', marginBottom: '8px' }}>
+                    {carSpace.type}
+                  </Typography>
+                  {renderDistance(carSpace)}
+                </Box>
+                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+                  {/* Car Space Ratings */}
+                  <Rating
+                    name={`carSpace-rating-${carSpace.carSpaceId}`}
+                    value={carSpace.totalrank}
+                    precision={0.5}
+                    readOnly
+                    sx={{ marginBottom: '8px' }}
+                  />
+                  <Typography variant="body2">Number of Ratings: {carSpace.ranknum}</Typography>
+                  {/* Book Button */}
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                      navigate(`/spotbooking/${carSpace.carSpaceId}`, { state: { carSpace } });
+                    }}
+                    sx={{ marginTop: '8px' }}
+                  >
+                    Book for ${carSpace.price}/hour
+                  </Button>
+                </Box>
+              </Paper>
+            ))}
+          </Box>
         </Box>
       </Grid>
-      <Grid item xs={12} sm={10}>
+      <Grid item xs={12} sm={7} md={8} lg={9}>
         {/* Map */}
-        <div id="map" style={{ width: '100%', height: 'calc(100vh - 64px)' }} />
+        <div id="map" style={{ width: '100%', height: '100vh' }} />
       </Grid>
     </Grid>
   );

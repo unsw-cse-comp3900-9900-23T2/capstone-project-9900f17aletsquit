@@ -6,7 +6,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Fab from '@mui/material/Fab';
 
-function MySpotDetail ({ token }) {
+function MySpotDetail () {
   const location = useLocation();
   const [userLocation, setUserLocation] = useState(null);
   const [distances, setDistances] = useState({});

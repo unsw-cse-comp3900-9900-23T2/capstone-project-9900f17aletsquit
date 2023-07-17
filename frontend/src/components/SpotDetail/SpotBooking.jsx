@@ -16,8 +16,8 @@ function SpotBooking ({ token }) {
 
   const navigate = useNavigate();
   const providerId = carSpace.userId;
-  const carSpaceId = carSpace.carSpaceId;
-  const sum = totalDays * carSpace.price;
+  const carSpaceid = carSpace.carSpaceId;
+  const tprice = totalDays * carSpace.price;
   const customerId = parseInt(token, 10);
 
   const today = new Date().toLocaleDateString();
@@ -42,26 +42,24 @@ function SpotBooking ({ token }) {
   };
 
   async function confirmBooking () {
-    const fromTime = startDate;
-    const toTime = endDate;
     console.log(startDate,
       endDate,
       customerId,
       providerId,
-      carSpaceId,
-      sum);
+      carSpaceid,
+      tprice);
     await fetch('http://127.0.0.1:8800/order/addOrder', {
       method: 'POST',
       headers: {
         'Content-type': 'application/json',
       },
       body: JSON.stringify({
-        fromTime,
-        toTime,
+        startDate,
+        endDate,
         customerId,
         providerId,
-        carSpaceId,
-        sum,
+        carSpaceid,
+        tprice,
       }),
     });
     alert('Booked successfilly!');
