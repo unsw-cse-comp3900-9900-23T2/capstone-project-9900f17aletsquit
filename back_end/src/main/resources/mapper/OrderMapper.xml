@@ -40,6 +40,12 @@
     from `order`
     where from_time &gt;= #{curtime,jdbcType=DATE} and car_space_id = #{carspaceId,jdbcType=INTEGER}
   </select>
+  <select id="orderSearch" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from `order`
+    where customer_id = #{customerId,jdbcType=INTEGER} and cur_rank IS NULL
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from `order`
     where order_id = #{orderId,jdbcType=INTEGER}

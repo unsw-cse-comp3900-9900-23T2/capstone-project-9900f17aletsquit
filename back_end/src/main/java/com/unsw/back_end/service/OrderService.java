@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface OrderService {
-    public int dateSearch(Integer carspaceid, Date fromtime,Date totime);
+    public LinkedList<Order> orderSearch(Integer customerId);
 
     public int addOrder(Order order);
 

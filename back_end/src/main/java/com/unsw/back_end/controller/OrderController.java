@@ -27,17 +27,11 @@ public class OrderController {
     @Autowired
     OrderService orderService;
 
-    @GetMapping("/dateSearch")
-    public ResponseEntity<?> dateSearch(@RequestParam("carspaceid")Integer carspaceid,@RequestParam("fromtime")String fromtime, @RequestParam("totime")String totime) throws ParseException {
-        String pattern = "yyyy-MM-dd";
-        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
-        Date fromdate = sdf.parse(fromtime);
-        Date todate = sdf.parse(totime);
-        int i = orderService.dateSearch(carspaceid,fromdate, todate);
-        if (i==0){
-            return ResponseEntity.ok("The date and time of your application are reasonable.");
-        }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The date and time of your parking space have been reserved by others.");
+    @GetMapping("/orderSearch")
+    public ResponseEntity<?> orderSearch(@RequestParam("customerId")Integer customerId){
+
+        LinkedList<Order> orders = orderService.orderSearch(customerId);
+        return ResponseEntity.ok(orders);
     }
 
     @PostMapping("/addOrder")

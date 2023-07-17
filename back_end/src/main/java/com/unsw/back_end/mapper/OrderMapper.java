@@ -22,6 +22,8 @@ public interface OrderMapper {
 
     LinkedList<Order> dateSearch(Integer carspaceid, Date fromtime, Date totime);
 
+    LinkedList<Order> orderSearch(Integer customerId);
+
     int selectByCustomerID(Integer customerId);
 
     LinkedList<Map> returnDateBycarspaceid(LocalDate curtime, Integer carspaceId);

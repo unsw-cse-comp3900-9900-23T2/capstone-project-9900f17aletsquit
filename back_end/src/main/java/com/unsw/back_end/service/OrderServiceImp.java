@@ -28,13 +28,14 @@ public class OrderServiceImp implements OrderService {
     @Autowired
     CommentofcarspaceMapper commentofcarspaceMapper;
     @Override
-    public int dateSearch(Integer carspaceid, Date fromtime, Date totime) {
-        LinkedList<Order> orders = orderMapper.dateSearch(carspaceid,fromtime, totime);
-        if(orders.size()==0){
-            return 0;
-        }
-        return 1;
+    public LinkedList<Order> orderSearch(Integer customerId) {
+        LinkedList<Order> orders = orderMapper.orderSearch(customerId);
+
+        return orders;
+
     }
+
+
 
     @Override
     public int addOrder(Order order) {
