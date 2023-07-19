@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, Avatar, Box, Grid, Accordion, AccordionSummary, AccordionDetails, IconButton } from '@mui/material';
+import { Typography, Avatar, Box, Grid, Accordion, AccordionSummary, AccordionDetails, IconButton, TextField } from '@mui/material';
 import Rating from '@mui/material/Rating';
 import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import EditIcon from '@mui/icons-material/Edit';
+import CheckIcon from '@mui/icons-material/Check';
+import CancelIcon from '@mui/icons-material/Cancel';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Fab from '@mui/material/Fab';
 
@@ -97,28 +100,152 @@ function MySpotDetail () {
     navigate('/myspot');
   };
 
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editData, setEditData] = useState({
+    address: carSpace.address,
+    carSpaceImage: carSpace.carspaceimage,
+    size: carSpace.size,
+    type: carSpace.type,
+    price: carSpace.price
+  });
+
+  const handleEdit = () => {
+    setIsEditMode(true);
+  };
+
+  const handleCancel = () => {
+    setIsEditMode(false);
+    setEditData({
+      address: carSpace.address,
+      carSpaceImage: carSpace.carspaceimage,
+      size: carSpace.size,
+      type: carSpace.type,
+      price: carSpace.price
+    });
+  };
+
+  const handleSave = async () => {
+    const { address, carSpaceImage, size, type, price } = editData;
+    await fetch('http://127.0.0.1:8800/carspace/update', {
+      method: 'PUT',
+      headers: {
+        token: 1,
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        carSpaceId: carSpace.carSpaceId,
+        price,
+        address,
+        size,
+        type,
+        carspaceimage: carSpaceImage,
+      }),
+    });
+    setIsEditMode(false);
+  };
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setEditData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setEditData((prevData) => ({
+        ...prevData,
+        carSpaceImage: reader.result,
+      }));
+    };
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <Grid container spacing={0} sx={{ height: '100vh' }}>
       <Grid item xs={12} sm={2} />
       <Grid item xs={12} sm={8}>
         <Box display="flex" justifyContent="center" alignItems="center" height="70%">
           <Avatar
-            src={carSpace.carspaceimage}
+            src={isEditMode ? editData.carSpaceImage : carSpace.carspaceimage}
             sx={{ width: '800px', height: '600px', marginBottom: '16px' }}
             variant="square"
           />
-          <Box sx={{ position: 'absolute', top: '10%', left: '15%' }}>
-            <IconButton color="inherit" onClick={handleGoBack}>
-              <Fab color="primary" aria-label="back">
-                <ArrowBackIcon fontSize="large" />
-              </Fab>
-            </IconButton>
-          </Box>
+          {!isEditMode && (
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', top: '10%', right: '15%' }}>
+              <IconButton color="inherit" onClick={handleGoBack}>
+                <Fab color="primary" aria-label="back">
+                  <ArrowBackIcon fontSize="large" />
+                </Fab>
+              </IconButton>
+              <IconButton color="inherit" onClick={handleEdit}>
+                <Fab color="primary" aria-label="edit">
+                  <EditIcon fontSize="large" />
+                </Fab>
+              </IconButton>
+            </Box>
+          )}
+          {isEditMode && (
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', top: '10%', right: '15%' }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <label htmlFor="carSpaceImage">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    id="carSpaceImage"
+                    style={{ display: 'none' }}
+                    onChange={handleImageUpload}
+                  />
+                  <IconButton color="inherit" component="label">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      id="carSpaceImage"
+                      style={{ display: 'none' }}
+                      onChange={handleImageUpload}
+                    />
+                    <Fab sx={{ backgroundColor: 'rgb(37,108,226)' }} aria-label="upload" component="span">
+                      <EditIcon fontSize="large" />
+                    </Fab>
+                  </IconButton>
+                </label>
+                <IconButton color="inherit" onClick={handleSave}>
+                  <Fab sx={{ backgroundColor: 'rgb(79,223,83)' }} aria-label="save">
+                    <CheckIcon fontSize="large" />
+                  </Fab>
+                </IconButton>
+                <IconButton color="inherit" onClick={handleCancel}>
+                  <Fab sx={{ backgroundColor: 'rgb(243,43,62)' }} aria-label="cancel">
+                    <CancelIcon fontSize="large" />
+                  </Fab>
+                </IconButton>
+              </Box>
+            </Box>
+          )}
         </Box>
         <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', padding: '20px' }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Typography variant="h3">
-              {carSpace.address}
+              {isEditMode
+                ? (
+                  <TextField
+                    name="address"
+                    value={editData.address}
+                    onChange={handleInputChange}
+                    size="small"
+                    multiline
+                    rows={2}
+                    fullWidth
+                  />
+                )
+                : (
+                  carSpace.address
+                )}
             </Typography>
             {renderDistance()}
           </Box>
@@ -135,10 +262,52 @@ function MySpotDetail () {
             Number of Ratings: {carSpace.ranknum}
           </Typography>
           <Typography variant="body1">
-            Size: {carSpace.size}
+            Size:{' '}
+            {isEditMode
+              ? (
+                <TextField
+                  name="size"
+                  value={editData.size}
+                  onChange={handleInputChange}
+                  size="small"
+                  fullWidth
+                />
+              )
+              : (
+                carSpace.size
+              )}
           </Typography>
           <Typography variant="body1">
-            {carSpace.type}
+            Type:{' '}
+            {isEditMode
+              ? (
+                <TextField
+                  name="type"
+                  value={editData.type}
+                  onChange={handleInputChange}
+                  size="small"
+                  fullWidth
+                />
+              )
+              : (
+                carSpace.type
+              )}
+          </Typography>
+          <Typography variant="body1">
+            Price:{' '}
+            {isEditMode
+              ? (
+                <TextField
+                  name="price"
+                  value={editData.price}
+                  onChange={handleInputChange}
+                  size="small"
+                  fullWidth
+                />
+              )
+              : (
+                carSpace.price
+              )}
           </Typography>
           <Accordion sx={{ marginTop: '16px' }}>
             <AccordionSummary>

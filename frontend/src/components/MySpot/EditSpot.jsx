@@ -8,23 +8,23 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
 
-function EditSpot ({ token }) {
+function EditSpot () {
   const location = useLocation();
   const [price, setPrice] = useState('');
   const [address, setAddress] = useState('');
   const [size, setSize] = useState('');
   const [type, setType] = useState(0); // Updated: Initialize type with 0
-  const [carspaceimage, setCarspaceimage] = useState(null); 
+  const [carspaceimage, setCarspaceimage] = useState(null);
   const carSpace = location.state?.carSpace;
   const carSpaceId = carSpace.carSpaceId;
 
   const navigate = useNavigate();
 
-  async function addSpot () {
+  async function editSpot () {
     await fetch('http://127.0.0.1:8800/carspace/update', {
       method: 'PUT',
       headers: {
-        token: token,
+        token: 1,
         'Content-type': 'application/json',
       },
       body: JSON.stringify({
@@ -34,8 +34,6 @@ function EditSpot ({ token }) {
         size,
         type,
         carspaceimage,
-        totalrank,
-        ranknum,
       }),
     });
     navigate('/myspot');
@@ -83,7 +81,7 @@ function EditSpot ({ token }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    addSpot();
+    editSpot();
     console.log({
       price,
       address,
