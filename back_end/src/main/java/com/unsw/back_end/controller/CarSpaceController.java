@@ -31,6 +31,9 @@ public class CarSpaceController {
     @PutMapping("/update")
     public ResponseEntity<?> updateSPace(@RequestHeader("token") String headerValue, @RequestBody Carspace carspace){
         carspace.setUserId(Integer.parseInt(headerValue));
+        if(carspace.getRanknum()!=null || carspace.getTotalrank()!=null){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Faild to update your car space");
+        }
         Carspace carspace1 = carSpaceService.updateCarSpace(carspace);
         if(carspace1!=null){
             return ResponseEntity.ok("You have updated your car space successfully");
