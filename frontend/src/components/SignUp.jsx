@@ -38,6 +38,7 @@ function SignUp () {
   const [username, setUsername] = React.useState('');
   const [userimage, setUserimage] = React.useState(null);
   const [birthday, setBirthday] = React.useState('');
+  const [invited, setInvited] = React.useState('');
 
   const navigate = useNavigate();
 
@@ -53,6 +54,7 @@ function SignUp () {
         upassword,
         userimage,
         birthday,
+        invited,
       }),
     });
     navigate('/signin');
@@ -178,6 +180,15 @@ function SignUp () {
           variant="outlined"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
+          style={styles.textField}
+        />
+        <TextField
+          required
+          id="outlined-required"
+          label="Your Friend's Email Address"
+          variant="outlined"
+          value={invited}
+          onChange={(e) => setInvited(e.target.value)}
           style={styles.textField}
         />
         <TextField
