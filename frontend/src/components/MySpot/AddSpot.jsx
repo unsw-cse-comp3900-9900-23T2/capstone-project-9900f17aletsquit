@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { IconButton, Avatar, Box, MenuItem, Select, InputLabel } from '@mui/material';
@@ -16,6 +16,49 @@ function AddSpot ({ token }) {
   const [carspaceimage, setCarspaceimage] = useState(null);
 
   const navigate = useNavigate();
+
+  // Autocomplete state and ref
+  const [autocomplete, setAutocomplete] = useState(null);
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    // Load Google Maps API
+    const loadGoogleMapsAPI = () => {
+      return new Promise((resolve) => {
+        if (window.google && window.google.maps) {
+          resolve();
+        } else {
+          const script = document.createElement('script');
+          script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyA-iW-2jlSRzjzw5MJxW3z9oeKS-xgPKuQ&libraries=places';
+          script.async = true;
+          script.defer = true;
+          script.onload = resolve;
+          document.head.appendChild(script);
+        }
+      });
+    };
+
+    // Initialize Autocomplete component
+    const initializeAutocomplete = () => {
+      console.log(`hahahah${inputRef.current}`);
+      const autocompleteInstance = new window.google.maps.places.PlaceAutocompleteElement(inputRef.current,);
+      setAutocomplete(autocompleteInstance);
+
+      // Listen to address input changes
+      autocompleteInstance.addListener('place_changed', onPlaceChanged);
+    };
+
+    // Load Google Maps API and initialize Autocomplete
+    loadGoogleMapsAPI().then(initializeAutocomplete);
+  }, []);
+
+  // Handle selected address
+  const onPlaceChanged = () => {
+    if (autocomplete) {
+      const place = autocomplete.getPlace();
+      setAddress(place.formatted_address || '');
+    }
+  };
 
   async function addSpot () {
     await fetch('http://127.0.0.1:8800/carspace/add', {
@@ -111,6 +154,7 @@ function AddSpot ({ token }) {
             </IconButton>
           </label>
         </Box>
+        <br />
 
         <OutlinedInput
           id="outlined-adornment-amount"
@@ -130,6 +174,7 @@ function AddSpot ({ token }) {
           type="text"
           value={address}
           onChange={handleAddress}
+          inputRef={inputRef} // Bind inputRef to TextField input
           fullWidth
           margin="normal"
         />
@@ -139,6 +184,7 @@ function AddSpot ({ token }) {
           justifyContent="flex-start"
           alignItems="center"
           marginBottom={2}
+          margin="normal"
         >
           <TextField
             label="Size"
@@ -146,7 +192,6 @@ function AddSpot ({ token }) {
             type="text"
             value={size}
             onChange={handleSize}
-            margin="normal"
           />
 
           <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -156,7 +201,6 @@ function AddSpot ({ token }) {
             value={type}
             onChange={handleType}
             style={{ minWidth: '100px', marginLeft: '8px' }}
-            margin="normal"
           >
             <MenuItem value={0}>Type1</MenuItem>
             <MenuItem value={1}>Type2</MenuItem>
