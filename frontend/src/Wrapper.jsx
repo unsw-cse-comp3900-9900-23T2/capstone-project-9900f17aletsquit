@@ -58,7 +58,7 @@ function Wrapper () {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/signin" element={<SignIn onSuccess = {manageTokenSet} />} />
           <Route path="/adminsignin" element={<AdminSignIn onSuccess = {manageTokenSet} />} />
-          <Route path="/mybookings" element={<MyBookings />} />
+          <Route path="/mybookings" element={<MyBookings token = {token}/>} />
           <Route path="/editmyprofile" element={<MyProfile token = {token}/>} />
           <Route path="/myprofile" element={<ViewMyProfile token = {token}/>} />
           <Route path="/myspot" element={<MySpot token = {token}/>} />
