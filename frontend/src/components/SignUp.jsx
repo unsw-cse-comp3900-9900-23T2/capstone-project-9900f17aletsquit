@@ -38,7 +38,7 @@ function SignUp () {
   const [username, setUsername] = React.useState('');
   const [userimage, setUserimage] = React.useState(null);
   const [birthday, setBirthday] = React.useState('');
-  const [invited, setInvited] = React.useState('');
+  const [invited, setInvited] = React.useState(null);
 
   const navigate = useNavigate();
 

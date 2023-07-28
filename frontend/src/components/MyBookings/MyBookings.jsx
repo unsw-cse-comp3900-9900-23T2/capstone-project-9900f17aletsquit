@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, Avatar, Box, Paper, Grid } from '@mui/material';
+import { Typography, Box, Paper, Grid } from '@mui/material';
 import Rating from '@mui/material/Rating';
-import Fab from '@mui/material/Fab';
-import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete'; // 导入删除图标
 import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 
 function MyBookings ({ token }) {
-  const [carSpaces, setCarSpaces] = useState([]);
+  const [orders, setOrders] = useState([]);
 
   const navigate = useNavigate();
-  async function fetchCarSpaces () {
-    // 从API获取预定的车位数据
+
+  async function fetchOrders () {
+    // Fetch orders data from the API
     const response = await fetch(`http://127.0.0.1:8800/order/orderSearch?customerId=${token}`, {
       method: 'GET',
       headers: {
@@ -20,84 +18,39 @@ function MyBookings ({ token }) {
       },
     });
     const data = await response.json();
-    console.log(data);
-    setCarSpaces(data);
+    setOrders(data);
   }
 
   useEffect(() => {
-    fetchCarSpaces();
+    fetchOrders();
   }, []);
 
-  const handleDeleteCarSpace = (carSpaceId) => {
-    const shouldDelete = window.confirm('Are you sure to delete the car space?');
-    if (shouldDelete) {
-      // 发送请求以删除车位，使用其ID
-      fetch(`http://127.0.0.1:8800/carspace/delete/${carSpaceId}`, {
-        method: 'DELETE',
-        headers: {
-          token: token,
-        },
-      }).then(() => {
-        // 更新状态，通过过滤掉被删除的车位
-        setCarSpaces((prevCarSpaces) => prevCarSpaces.filter((cs) => cs.carSpaceId !== carSpaceId));
-      });
-    }
-  };
-
-  const renderCarSpaces = () => {
-    return carSpaces.map((carSpace) => (
-      <Grid item xs={4} key={carSpace.carSpaceId}>
+  const renderOrders = () => {
+    return orders.map((order) => (
+      <Grid item xs={4} key={order.orderId}>
         <Box marginBottom="20px">
-          <Paper elevation={3} style={{ padding: '20px', height: '100%', position: 'relative' }}>
-            {/* 删除图标（X图标） */}
-            <DeleteIcon
-              onClick={() => handleDeleteCarSpace(carSpace.carSpaceId)}
-              style={{
-                position: 'absolute',
-                top: '15px',
-                right: '15px',
-                cursor: 'pointer',
-              }}
-            />
-            {/* 其余车位信息内容 */}
+          <Paper elevation={3} style={{ padding: '20px', height: '100%' }}>
             <Box display="flex" flexDirection="column" alignItems="center" height="100%">
-              <Avatar src={carSpace.carspaceimage} sx={{ width: '120px', height: '120px' }} />
-
               <Box textAlign="center" mt={2} mb={1}>
                 <Typography variant="h6" component="span">
-                  price：
+                  Rental Dates:
                 </Typography>
                 <Typography variant="body1" component="span">
-                  {carSpace.price}
-                </Typography>
-              </Box>
-              <Box textAlign="center" mb={1}>
-                <Typography variant="body1" component="span">
-                  Address:
-                </Typography>
-                <Typography variant="body1" component="span">
-                  {carSpace.address}
+                  {order.fromTime} - {order.toTime}
                 </Typography>
               </Box>
               <Box textAlign="center" mb={1}>
                 <Typography variant="body1" component="span">
-                  Size:
+                  Payment Price:
                 </Typography>
                 <Typography variant="body1" component="span">
-                  {carSpace.size}
-                </Typography>
-              </Box>
-              <Box textAlign="center" mb={1}>
-                <Typography variant="body1" component="span">
-                  Type:
-                </Typography>
-                <Typography variant="body1" component="span">
-                  {carSpace.type}
+                  {order.sum}
                 </Typography>
               </Box>
 
-              <Rating name="carSpace-rating" value={carSpace.totalrank} precision={0.5} readOnly />
-              <Typography variant="body2">Number of comments:{carSpace.ranknum}</Typography>
+              {/* Other order details here */}
+
+              <Rating name="order-rating" value={order.curRank} precision={0.5} readOnly />
 
               <Box display="flex" justifyContent="center" mt="auto">
                 <Button
@@ -105,7 +58,7 @@ function MyBookings ({ token }) {
                   color="primary"
                   style={{ margin: '0 10px' }}
                   onClick={() => {
-                    navigate(`/myspotdetail/${carSpace.carSpaceId}`, { state: { carSpace } });
+                    navigate(`/orderdetails/${order.orderId}`, { state: { order } });
                   }}
                 >
                   View Details
@@ -120,15 +73,11 @@ function MyBookings ({ token }) {
 
   return (
     <>
-      <Box position="fixed" bottom={10} right={10} zIndex={999}>
-        <Fab color="primary" onClick={() => navigate('/addspot')}>
-          <AddIcon />
-        </Fab>
-      </Box>
       <Box paddingTop="64px">
         <Grid container spacing={2}>
-          {renderCarSpaces()}
+          {renderOrders()}
         </Grid>
+        
       </Box>
     </>
   );
