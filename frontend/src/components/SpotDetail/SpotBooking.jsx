@@ -9,27 +9,27 @@ function SpotBooking ({ token }) {
   const [userLocation, setUserLocation] = useState(null);
   const [distances, setDistances] = useState({});
   const carSpace = location.state?.carSpace;
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [fromTime, setFromTime] = useState('');
+  const [toTime, setToTime] = useState('');
   const [openDialog, setOpenDialog] = useState(false); // Dialog state
   const [totalDays, setTotalDays] = useState(0); // Total rental days state
 
   const navigate = useNavigate();
   const providerId = carSpace.userId;
-  const carSpaceid = carSpace.carSpaceId;
-  const tprice = totalDays * carSpace.price;
+  const carSpaceId = carSpace.carSpaceId;
+  const sum = totalDays * carSpace.price;
   const customerId = parseInt(token, 10);
 
   const today = new Date().toLocaleDateString();
 
   const handleBooking = (e) => {
-    if (!startDate || !endDate) {
+    if (!fromTime || !toTime) {
       alert('Please select both start and end dates.');
       return;
     }
 
-    const start = new Date(startDate);
-    const end = new Date(endDate);
+    const start = new Date(fromTime);
+    const end = new Date(toTime);
 
     if (end < start) {
       alert('End date cannot be earlier than start date.');
@@ -42,24 +42,24 @@ function SpotBooking ({ token }) {
   };
 
   async function confirmBooking () {
-    console.log(startDate,
-      endDate,
+    console.log(fromTime,
+      toTime,
       customerId,
       providerId,
-      carSpaceid,
-      tprice);
+      carSpaceId,
+      sum);
     await fetch('http://127.0.0.1:8800/order/addOrder', {
       method: 'POST',
       headers: {
         'Content-type': 'application/json',
       },
       body: JSON.stringify({
-        startDate,
-        endDate,
+        fromTime,
+        toTime,
         customerId,
         providerId,
-        carSpaceid,
-        tprice,
+        carSpaceId,
+        sum,
       }),
     });
     alert('Booked successfilly!');
@@ -72,12 +72,12 @@ function SpotBooking ({ token }) {
 
   const handleStartDateChange = (event) => {
     const date = event.target.value;
-    setStartDate(date);
+    setFromTime(date);
   };
 
   const handleEndDateChange = (event) => {
     const date = event.target.value;
-    setEndDate(date);
+    setToTime(date);
   };
 
   const handleDialogClose = () => {
@@ -307,7 +307,7 @@ function SpotBooking ({ token }) {
                   </Typography>
                   <TextField
                     type="date"
-                    value={startDate}
+                    value={fromTime}
                     onChange={handleStartDateChange}
                     variant="outlined"
                     size="large"
@@ -333,7 +333,7 @@ function SpotBooking ({ token }) {
                   </Typography>
                   <TextField
                     type="date"
-                    value={endDate}
+                    value={toTime}
                     onChange={handleEndDateChange}
                     variant="outlined"
                     size="large"
@@ -383,10 +383,10 @@ function SpotBooking ({ token }) {
         <DialogTitle>Booking Details</DialogTitle>
         <DialogContent>
           <Typography>
-            Rental start date: {startDate}
+            Rental start date: {fromTime}
           </Typography>
           <Typography>
-            Rental end date: {endDate}
+            Rental end date: {toTime}
           </Typography>
           <Typography>
             Total days: {totalDays}

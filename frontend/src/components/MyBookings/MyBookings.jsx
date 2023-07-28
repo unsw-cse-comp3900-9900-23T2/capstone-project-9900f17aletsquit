@@ -77,7 +77,6 @@ function MyBookings ({ token }) {
         <Grid container spacing={2}>
           {renderOrders()}
         </Grid>
-        
       </Box>
     </>
   );
