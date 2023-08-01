@@ -19,17 +19,28 @@ function AddSpot ({ token }) {
 
   // Autocomplete state and ref
   const [autocomplete, setAutocomplete] = useState(null);
+  const [mapsAPILoaded, setMapsAPILoaded] = useState(false);
   const inputRef = useRef(null);
 
+  // Move the `initializeAutocomplete` function outside the useEffect scope
+  const initializeAutocomplete = () => {
+    console.log(`wocao${inputRef.current}`);
+    const autocompleteInstance = new window.google.maps.places.Autocomplete(inputRef.current);
+    setAutocomplete(autocompleteInstance);
+
+    // Listen to address input changes
+    autocompleteInstance.addListener('place_changed', onPlaceChanged);
+  };
+
   useEffect(() => {
-    // Load Google Maps API
     const loadGoogleMapsAPI = () => {
       return new Promise((resolve) => {
         if (window.google && window.google.maps) {
           resolve();
         } else {
           const script = document.createElement('script');
-          script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyA-iW-2jlSRzjzw5MJxW3z9oeKS-xgPKuQ&libraries=places';
+          script.src =
+            'https://maps.googleapis.com/maps/api/js?key=AIzaSyA-iW-2jlSRzjzw5MJxW3z9oeKS-xgPKuQ&libraries=places';
           script.async = true;
           script.defer = true;
           script.onload = resolve;
@@ -38,19 +49,16 @@ function AddSpot ({ token }) {
       });
     };
 
-    // Initialize Autocomplete component
-    const initializeAutocomplete = () => {
-      console.log(`hahahah${inputRef.current}`);
-      const autocompleteInstance = new window.google.maps.places.PlaceAutocompleteElement(inputRef.current,);
-      setAutocomplete(autocompleteInstance);
-
-      // Listen to address input changes
-      autocompleteInstance.addListener('place_changed', onPlaceChanged);
-    };
-
-    // Load Google Maps API and initialize Autocomplete
-    loadGoogleMapsAPI().then(initializeAutocomplete);
+    loadGoogleMapsAPI().then(() => {
+      setMapsAPILoaded(true);
+    });
   }, []);
+
+  useEffect(() => {
+    if (mapsAPILoaded && inputRef.current) {
+      initializeAutocomplete();
+    }
+  }, [mapsAPILoaded]);
 
   // Handle selected address
   const onPlaceChanged = () => {

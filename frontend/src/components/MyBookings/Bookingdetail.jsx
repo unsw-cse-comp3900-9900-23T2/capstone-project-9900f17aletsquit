@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, Avatar, Box, Grid, Accordion, AccordionSummary, AccordionDetails, IconButton } from '@mui/material';
+import { Typography, Avatar, Box, Grid, Accordion, AccordionSummary, AccordionDetails, TextField } from '@mui/material';
 import Rating from '@mui/material/Rating';
 import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-// import EditIcon from '@mui/icons-material/Edit';
-// import CheckIcon from '@mui/icons-material/Check';
-// import CancelIcon from '@mui/icons-material/Cancel';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Fab from '@mui/material/Fab';
 
@@ -14,13 +11,18 @@ function Bookingdetail () {
   const [userLocation, setUserLocation] = useState(null);
   const [distances, setDistances] = useState({});
   const [carSpace, setCarSpace] = useState({});
+  const [curRank, setCurRank] = useState(5);
+  const [historyComment, setHistoryComment] = useState('');
   const order = location.state?.order;
+  const orderId = order.orderId;
+  const [carSpaceId, setCarSpaceId] = useState('');
 
   async function fetchCarSpaceAddress (carSpaceId) {
     // Fetch car space address from the API using the carSpaceId
     const response = await fetch(`http://127.0.0.1:8800/carspace/query/${carSpaceId}`);
     const data = await response.json();
     setCarSpace(data);
+    setCarSpaceId(data.carSpaceId);
   }
   fetchCarSpaceAddress(order.carSpaceId);
 
@@ -109,6 +111,32 @@ function Bookingdetail () {
     navigate('/mybookings');
   };
 
+  const handleRatingChange = (event, newValue) => {
+    setCurRank(newValue);
+  };
+
+  const handleCommentChange = (event) => {
+    setHistoryComment(event.target.value);
+  };
+
+  async function handleAddCommentAndRating () {
+    const response = await fetch('http://127.0.0.1:8800/order/rankYourOrder', {
+      method: 'PUT',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        orderId,
+        carSpaceId,
+        curRank,
+        historyComment,
+      }),
+    });
+    const data = await response.text();
+    console.log(data);
+    alert(data);
+  }
+
   return (
     <Grid container spacing={0} sx={{ height: '100vh' }}>
       <Grid item xs={12} sm={2} />
@@ -120,11 +148,9 @@ function Bookingdetail () {
             variant="square"
           />
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', top: '10%', right: '15%' }}>
-            <IconButton color="inherit" onClick={handleGoBack}>
-              <Fab color="primary" aria-label="back">
-                <ArrowBackIcon fontSize="large" />
-              </Fab>
-            </IconButton>
+            <Fab color="inherit" onClick={handleGoBack} aria-label="back">
+              <ArrowBackIcon fontSize="large" />
+            </Fab>
           </Box>
         </Box>
         <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', padding: '20px' }}>
@@ -158,6 +184,41 @@ function Bookingdetail () {
             Price:{' '}
             {carSpace.price}
           </Typography>
+          {/* Form for submitting comments and ratings */}
+          <Box sx={{ marginTop: '16px' }}>
+            <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+              Add Your Comment and Rating
+            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Rating
+                name={`add-rating-${carSpace.carSpaceId}`}
+                value={curRank}
+                precision={0.5}
+                onChange={handleRatingChange}
+              />
+              <Typography variant="body2" sx={{ marginLeft: '8px' }}>
+                {curRank}
+              </Typography>
+            </Box>
+            <TextField
+              label="Your Comment"
+              variant="outlined"
+              multiline
+              rows={4}
+              fullWidth
+              value={historyComment}
+              onChange={handleCommentChange}
+              sx={{ marginTop: '8px' }}
+            />
+            <Fab
+              variant="extended"
+              color="primary"
+              onClick={handleAddCommentAndRating}
+              sx={{ marginTop: '16px' }}
+            >
+              Submit
+            </Fab>
+          </Box>
           <Accordion sx={{ marginTop: '16px' }}>
             <AccordionSummary>
               <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
