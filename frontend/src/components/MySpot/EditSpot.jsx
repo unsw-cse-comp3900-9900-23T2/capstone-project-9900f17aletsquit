@@ -36,7 +36,6 @@ function EditSpot () {
         carspaceimage,
       }),
     });
-    navigate('/myspot');
   }
 
   const handlePrice = (e) => {

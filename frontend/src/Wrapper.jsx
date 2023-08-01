@@ -17,6 +17,7 @@ import ViewMyProfile from './components/MyProfile/ViewProfile';
 import AddSpot from './components/MySpot/AddSpot';
 import SpotBooking from './components/SpotDetail/SpotBooking'
 import MySpotDetail from './components/MySpot/MySpotDetail';
+import Bookingdetail from './components/MyBookings/Bookingdetail';
 
 function Wrapper () {
   // const [page, setPage] = React.useState('signup');
@@ -68,6 +69,7 @@ function Wrapper () {
           <Route path="/addspot" element={<AddSpot token = {token}/>} />
           <Route path="/spotbooking/:carSpaceId" element={<SpotBooking token = {token}/>} />
           <Route path="/myspotdetail/:carSpaceId" element={<MySpotDetail />} />
+          <Route path="/bookingdetail/:orderId" element={<Bookingdetail />} />
         </Route>
       </Routes>
     </>

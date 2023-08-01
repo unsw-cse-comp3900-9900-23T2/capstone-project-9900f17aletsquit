@@ -13,7 +13,7 @@ function MyProfile ({ token }) {
   const [birthday, setBirthday] = useState('');
   const [userimage, setUserimage] = useState(null);
 
-  // const [previousEmail, setPreviousEmail] = useState('');
+  const [previousEmail, setPreviousEmail] = useState('');
   const [previousUpassword, setPreviousUpassword] = useState('');
   const [previousUsername, setPreviousUsername] = useState('');
   const [previousUserimage, setPreviousUserimage] = useState('');
@@ -28,7 +28,7 @@ function MyProfile ({ token }) {
       },
     });
     const data = await response.json();
-    // setPreviousEmail(data.email);
+    setPreviousEmail(data.email);
     setPreviousUpassword(data.upassword);
     setPreviousUsername(data.username);
     setPreviousUserimage(data.userimage);
@@ -143,7 +143,7 @@ function MyProfile ({ token }) {
           type="email"
           value={email}
           onChange={handleEmailChange}
-          placeholder="Placeholder"
+          defaultValue={previousEmail}
           fullWidth
           margin="normal"
         />
