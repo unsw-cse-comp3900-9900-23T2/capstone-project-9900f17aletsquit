@@ -73,6 +73,10 @@ function SpotBooking ({ token }) {
 
   const handleStartDateChange = (event) => {
     const date = event.target.value;
+    if (date < today) {
+      alert('Start date cannot be earlier than the current date.');
+      return;
+    }
     setFromTime(date);
   };
 
@@ -120,6 +124,7 @@ function SpotBooking ({ token }) {
     const response = await fetch(`http://127.0.0.1:8800/carspace/searchAllComment/${carSpaceId}`, {
       method: 'GET',
       headers: {
+        token: token,
       },
     });
     const data = await response.json();

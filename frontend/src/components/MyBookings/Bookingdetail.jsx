@@ -18,6 +18,7 @@ function Bookingdetail () {
   const order = location.state?.order;
   const orderId = order.orderId;
   const [carSpaceId, setCarSpaceId] = useState('');
+  const [comment, setComment] = useState([]);
 
   useEffect(() => {
     // Fetch car space address from the API using the carSpaceId
@@ -35,6 +36,19 @@ function Bookingdetail () {
   const handleGeolocationError = (error) => {
     console.error('Error getting geolocation:', error);
   };
+
+  async function fetchComment (order) {
+    // 从API获取pinglun
+    const response = await fetch(`http://127.0.0.1:8800/carspace/searchAllComment/${order.carSpaceId}`, {
+      method: 'GET',
+      headers: {
+      },
+    });
+    const data = await response.json();
+    setComment(data);
+  }
+
+  fetchComment(order);
 
   async function getCoordinatesFromAddress (address) {
     try {
@@ -231,9 +245,11 @@ function Bookingdetail () {
               </Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
-                {carSpace.curcomment}
-              </Typography>
+              {comment.map((commentItem, index) => (
+                <Typography key={index} variant="body2" sx={{ fontStyle: 'italic', marginBottom: '4px' }}>
+                  {commentItem}
+                </Typography>
+              ))}
             </AccordionDetails>
           </Accordion>
         </Box>
