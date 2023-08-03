@@ -8,9 +8,9 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-
 import java.util.LinkedList;
 import java.util.List;
+
 
 @Service
 public class CarSpaceServiceImp implements CarSpaceService {
@@ -40,13 +40,10 @@ public class CarSpaceServiceImp implements CarSpaceService {
         LinkedList<Carspace> carspaces = carspaceMapper.selectByUserId(carspace.getUserId());
         Carspace carspace2 = carspaceMapper.selectByPrimaryKey(carSpaceId);
         if(carspaces.contains(carspace2)){
-            String address = carspace.getAddress();
-            Carspace carspace1 = carspaceMapper.selectByAddress(carspace.getAddress());
-            if(carspace1==null){
-                carspaceMapper.updateByPrimaryKeySelective(carspace);
-                Carspace carspace3 = carspaceMapper.selectByPrimaryKey(carSpaceId);
-                return carspace3;
-            }
+            carspaceMapper.updateByPrimaryKeySelective(carspace);
+            Carspace carspace3 = carspaceMapper.selectByPrimaryKey(carSpaceId);
+            return carspace3;
+
         }
 
         return null;

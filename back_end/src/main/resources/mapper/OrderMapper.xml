@@ -46,6 +46,11 @@
     from `order`
     where customer_id = #{customerId,jdbcType=INTEGER} and cur_rank IS NULL
   </select>
+  <select id="selectByOrderID" resultType="java.lang.Integer">
+    select count(*)
+    from `order`
+    where order_id = #{OrderId,jdbcType=INTEGER}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from `order`
     where order_id = #{orderId,jdbcType=INTEGER}

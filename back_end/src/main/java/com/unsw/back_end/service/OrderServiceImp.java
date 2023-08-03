@@ -30,12 +30,9 @@ public class OrderServiceImp implements OrderService {
     @Override
     public LinkedList<Order> orderSearch(Integer customerId) {
         LinkedList<Order> orders = orderMapper.orderSearch(customerId);
-
         return orders;
 
     }
-
-
 
     @Override
     public int addOrder(Order order) {
@@ -56,9 +53,8 @@ public class OrderServiceImp implements OrderService {
         userMapper.updateByPrimaryKeySelective(customer);
         userMapper.updateByPrimaryKeySelective(provider);
         int i = orderMapper.insertSelective(order);
-        int i1 = orderMapper.selectByCustomerID(order.getCustomerId());
+        int i1 = orderMapper.selectByOrderID(order.getOrderId());
         if(i1==1){
-
             User user = userMapper.selectByPrimaryKey(order.getCustomerId());
             if(user.getInvited()!=null){
                 String invited = user.getInvited();
