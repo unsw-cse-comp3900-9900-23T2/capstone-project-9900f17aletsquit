@@ -16,7 +16,7 @@ import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import LocalParkingIcon from '@mui/icons-material/LocalParking';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import WalletIcon from '@mui/icons-material/Wallet';
-import Diversity3Icon from '@mui/icons-material/Diversity3';
+// import Diversity3Icon from '@mui/icons-material/Diversity3';
 import AppsIcon from '@mui/icons-material/Apps';
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
 
@@ -90,7 +90,7 @@ function Site ({ setToken }) {
         ))}
       </List>
       <Divider />
-      <List>
+      {/* <List>
         {['Invite a Friend'].map((text, index) => (
           <ListItem key={text} disablePadding>
             <ListItemButton onClick={() => handleNavigation(`/${text.replace(/\s+/g, '').toLowerCase()}`)}>
@@ -101,7 +101,7 @@ function Site ({ setToken }) {
             </ListItemButton>
           </ListItem>
         ))}
-      </List>
+      </List> */}
     </Box>
   );
 

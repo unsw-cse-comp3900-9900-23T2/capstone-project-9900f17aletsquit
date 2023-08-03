@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, Avatar, Box, Grid, Accordion, AccordionSummary, AccordionDetails, IconButton, TextField } from '@mui/material';
+import { Typography, Avatar, Box, Grid, Accordion, AccordionSummary, AccordionDetails, TextField } from '@mui/material';
 import Rating from '@mui/material/Rating';
 import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -14,6 +14,7 @@ function MySpotDetail () {
   const [userLocation, setUserLocation] = useState(null);
   const [distances, setDistances] = useState({});
   const carSpace = location.state?.carSpace;
+  const [comment, setComment] = useState([]);
 
   const navigate = useNavigate();
 
@@ -152,18 +153,43 @@ function MySpotDetail () {
     }));
   };
 
-  const handleImageUpload = (event) => {
-    const file = event.target.files[0];
+  async function fetchComment (carspace) {
+    // 从API获取pinglun
+    const response = await fetch(`http://127.0.0.1:8800/carspace/searchAllComment/${carspace.carSpaceId}`, {
+      method: 'GET',
+      headers: {
+      },
+    });
+    const data = await response.json();
+    setComment(data);
+  }
+  fetchComment(carSpace);
+
+  function fileToDataUrl (file) {
+    const validFileTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+    const valid = validFileTypes.find((type) => type === file.type);
+    // Bad data, let's walk away.
+    if (!valid) {
+      throw Error('provided file is not a png, jpg or jpeg image.');
+    }
     const reader = new FileReader();
-    reader.onloadend = () => {
+    const dataUrlPromise = new Promise((resolve, reject) => {
+      reader.onerror = reject;
+      reader.onload = () => resolve(reader.result);
+    });
+    reader.readAsDataURL(file);
+    return dataUrlPromise;
+  }
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    fileToDataUrl(file).then((base64Str) => {
       setEditData((prevData) => ({
         ...prevData,
-        carSpaceImage: reader.result,
+        carSpaceImage: base64Str,
       }));
-    };
-    if (file) {
-      reader.readAsDataURL(file);
-    }
+      console.log(`:pspsps${base64Str}`);
+    });
   };
 
   return (
@@ -177,21 +203,17 @@ function MySpotDetail () {
             variant="square"
           />
           {!isEditMode && (
-            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', top: '10%', right: '15%' }}>
-              <IconButton color="inherit" onClick={handleGoBack}>
-                <Fab color="primary" aria-label="back">
-                  <ArrowBackIcon fontSize="large" />
-                </Fab>
-              </IconButton>
-              <IconButton color="inherit" onClick={handleEdit}>
-                <Fab color="primary" aria-label="edit">
-                  <EditIcon fontSize="large" />
-                </Fab>
-              </IconButton>
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', top: '10%', right: '15%', marginLeft: '100px' }}>
+              <Fab color="primary" aria-label="back" onClick={handleGoBack}>
+                <ArrowBackIcon fontSize="large" />
+              </Fab><br/>
+              <Fab color="primary" aria-label="edit" onClick={handleEdit}>
+                <EditIcon fontSize="large" />
+              </Fab>
             </Box>
           )}
           {isEditMode && (
-            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', top: '10%', right: '15%' }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', top: '10%', right: '15%', marginLeft: '100px' }}>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 <label htmlFor="carSpaceImage">
                   <input
@@ -201,7 +223,8 @@ function MySpotDetail () {
                     style={{ display: 'none' }}
                     onChange={handleImageUpload}
                   />
-                  <IconButton color="inherit" component="label">
+                  <Fab sx={{ backgroundColor: 'rgb(37,108,226)' }} aria-label="upload" component="span">
+                    <EditIcon fontSize="large" />
                     <input
                       type="file"
                       accept="image/*"
@@ -209,21 +232,14 @@ function MySpotDetail () {
                       style={{ display: 'none' }}
                       onChange={handleImageUpload}
                     />
-                    <Fab sx={{ backgroundColor: 'rgb(37,108,226)' }} aria-label="upload" component="span">
-                      <EditIcon fontSize="large" />
-                    </Fab>
-                  </IconButton>
-                </label>
-                <IconButton color="inherit" onClick={handleSave}>
-                  <Fab sx={{ backgroundColor: 'rgb(79,223,83)' }} aria-label="save">
-                    <CheckIcon fontSize="large" />
                   </Fab>
-                </IconButton>
-                <IconButton color="inherit" onClick={handleCancel}>
-                  <Fab sx={{ backgroundColor: 'rgb(243,43,62)' }} aria-label="cancel">
-                    <CancelIcon fontSize="large" />
-                  </Fab>
-                </IconButton>
+                </label><br/>
+                <Fab sx={{ backgroundColor: 'rgb(79,223,83)' }} aria-label="save" onClick={handleSave}>
+                  <CheckIcon fontSize="large" />
+                </Fab><br/>
+                <Fab sx={{ backgroundColor: 'rgb(243,43,62)' }} aria-label="cancel" onClick={handleCancel}>
+                  <CancelIcon fontSize="large" />
+                </Fab>
               </Box>
             </Box>
           )}
@@ -316,9 +332,11 @@ function MySpotDetail () {
               </Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
-                {carSpace.curcomment}
-              </Typography>
+              {comment.map((commentItem, index) => (
+                <Typography key={index} variant="body2" sx={{ fontStyle: 'italic', marginBottom: '4px' }}>
+                  {commentItem}
+                </Typography>
+              ))}
             </AccordionDetails>
           </Accordion>
         </Box>

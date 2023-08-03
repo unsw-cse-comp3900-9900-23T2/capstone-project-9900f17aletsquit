@@ -13,6 +13,7 @@ function SpotBooking ({ token }) {
   const [toTime, setToTime] = useState('');
   const [openDialog, setOpenDialog] = useState(false); // Dialog state
   const [totalDays, setTotalDays] = useState(0); // Total rental days state
+  const [comment, setComment] = useState([]);
 
   const navigate = useNavigate();
   const providerId = carSpace.userId;
@@ -114,6 +115,16 @@ function SpotBooking ({ token }) {
       return null;
     }
   }
+  async function fetchComment () {
+    // 从API获取pinglun
+    const response = await fetch(`http://127.0.0.1:8800/carspace/searchAllComment/${carSpaceId}`, {
+      method: 'GET',
+      headers: {
+      },
+    });
+    const data = await response.json();
+    setComment(data);
+  }
 
   const handleGeolocationSuccess = (position) => {
     const { latitude, longitude } = position.coords;
@@ -145,7 +156,7 @@ function SpotBooking ({ token }) {
     const distance = R * c;
     return distance.toFixed(2); // Return distance in kilometers with 2 decimal places
   };
-
+  fetchComment();
   useEffect(() => {
     const updateDistances = async () => {
       if (userLocation) {
@@ -270,12 +281,11 @@ function SpotBooking ({ token }) {
               </Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Typography
-                variant="body2"
-                sx={{ fontStyle: 'italic' }}
-              >
-                {carSpace.curcomment}
-              </Typography>
+              {comment.map((commentItem, index) => (
+                <Typography key={index} variant="body2" sx={{ fontStyle: 'italic', marginBottom: '4px' }}>
+                  {commentItem}
+                </Typography>
+              ))}
             </AccordionDetails>
           </Accordion>
           <Box

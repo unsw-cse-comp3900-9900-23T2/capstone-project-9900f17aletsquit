@@ -96,7 +96,7 @@ function MySpot ({ token }) {
               </Box>
 
               <Rating name="carSpace-rating" value={carSpace.totalrank} precision={0.5} readOnly />
-              <Typography variant="body2">Number of comments:{carSpace.ranknum}</Typography>
+              <Typography variant="body2">Number of Ratings:{carSpace.ranknum}</Typography>
 
               <Box display="flex" justifyContent="center" mt="auto">
                 <Button

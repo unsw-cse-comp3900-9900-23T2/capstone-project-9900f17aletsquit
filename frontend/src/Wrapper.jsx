@@ -4,7 +4,6 @@ import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import Site from './components/Site';
 import SignIn from './components/SignIn';
 import SignUp from './components/SignUp';
-import Dashboard from './components/Dashboard';
 import MyBookings from './components/MyBookings/MyBookings';
 import MyProfile from './components/MyProfile/MyProfile';
 import FindASpot from './components/FindASpot/FindASpot';
@@ -53,7 +52,6 @@ function Wrapper () {
     <>
       <Routes>
         <Route path="/" element={<Site setToken = {setToken} />}>
-          <Route path="/dashboard" element={<Dashboard token = {token} />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/signin" element={<SignIn onSuccess = {manageTokenSet} />} />
           <Route path="/adminsignin" element={<AdminSignIn onSuccess = {manageTokenSet} />} />

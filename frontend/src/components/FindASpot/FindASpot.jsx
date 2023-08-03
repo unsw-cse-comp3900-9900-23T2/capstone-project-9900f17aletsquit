@@ -137,8 +137,8 @@ function FindASpot () {
             Book for $${carSpace.price}/hour
           </Button>
         </Box>
-      </div>
-    `;
+      </div>`
+    ;
   };
 
   const handleSearch = (event) => {

@@ -10,21 +10,25 @@ function Bookingdetail () {
   const location = useLocation();
   const [userLocation, setUserLocation] = useState(null);
   const [distances, setDistances] = useState({});
-  const [carSpace, setCarSpace] = useState({});
+  const [carSpace, setCarSpace] = useState({
+    totalrank: 0, // Set an initial value for totalrank
+  });
   const [curRank, setCurRank] = useState(5);
   const [historyComment, setHistoryComment] = useState('');
   const order = location.state?.order;
   const orderId = order.orderId;
   const [carSpaceId, setCarSpaceId] = useState('');
 
-  async function fetchCarSpaceAddress (carSpaceId) {
+  useEffect(() => {
     // Fetch car space address from the API using the carSpaceId
-    const response = await fetch(`http://127.0.0.1:8800/carspace/query/${carSpaceId}`);
-    const data = await response.json();
-    setCarSpace(data);
-    setCarSpaceId(data.carSpaceId);
-  }
-  fetchCarSpaceAddress(order.carSpaceId);
+    const fetchCarSpaceData = async () => {
+      const response = await fetch(`http://127.0.0.1:8800/carspace/query/${order.carSpaceId}`);
+      const data = await response.json();
+      setCarSpace(data);
+      setCarSpaceId(data.carSpaceId);
+    };
+    fetchCarSpaceData();
+  }, [order.carSpaceId]);
 
   const navigate = useNavigate();
 
@@ -164,6 +168,7 @@ function Bookingdetail () {
             <Rating
               name={`carSpace-rating-${carSpace.carSpaceId}`}
               value={carSpace.totalrank}
+              defaultValue={0} // Set the default value here as well
               precision={0.5}
               readOnly
               sx={{ fontSize: '2.5rem' }}
