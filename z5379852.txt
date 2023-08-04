@@ -21,24 +21,21 @@ functions, we have implemented the redis cache, so that all CRUD operations will
 the database but extracted from the redis cache, which reduces the consumption of resources.
 
 Week 5
-adding, modifying, deleting and querying parking spaces
+Implement backend functionality: Adding, editing, deleting and querying car spaces.
 
 Week 6
-Add some special queries, such as querying all parking spaces, querying parking spaces owned by parking 
+Add all the special queries we need, such as querying all parking spaces, querying parking spaces owned by parking 
 space providers, querying unique parking spaces by parking space ID, and querying parking spaces by address.
 
 Week 7
-A new table, comment, is added to the database to store the comments of each parking space after consumers 
-use it. Based on this table, all comments of the parking space can be queried according to the parking space 
-number, which is convenient for future consumers to evaluate the parking space.
+Add a new table to store comment for car space in the database.
 
 Week 8
-Some basic functions about the order table are realized: adding orders and modifying orders.
+Implement backend functionality: Adding, editing, deleting and querying orders.
 
 Week 9
-Some basic functions about the order table are realized: deleting orders and querying orders.
+Adding enough data to the database.Debugging for the backend. Testing connection 
+between frontend and backend.
 
 Week 10
-According to the requirements of the front end, the back end has added a new function for returning consumers 
-to inquire about the available date of the parking space that will be placed soon, and the back end will return 
-all the reserved parking spaces of the parking space for consumers to choose.
+Writing report and readme file.Preparing for the final demo.
