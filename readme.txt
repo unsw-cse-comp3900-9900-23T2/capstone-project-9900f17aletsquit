@@ -1,8 +1,8 @@
 The project was run and tested on a Lubuntu 20.4.1 LTS virtual machine as
 Project requirements.
 The following are all the commands required to run the project. 
-You need to run the first eight steps of commands when you use them for the first time. 
-If you want to use them later, you only need to start from the ninth step.
+You need to run the first ten steps of commands when you use them for the first time. 
+If you want to use them later, you only need to start from the ninth step and ignore the tenth step.
 1.Update apt
 	(1)sudo apt-get update
 2.Install curl
