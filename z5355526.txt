@@ -28,6 +28,7 @@ Some basic functions about the order table are realized: adding orders and modif
 
 Week 9
 Some basic functions about the order table are realized: deleting orders and querying orders.
+According to the requirements of the front end, the back end has added a new function for returning consumers to inquire about the available date of the parking space that will be placed soon, and the back end will return all the reserved parking spaces of the parking space for consumers to choose.
 
 Week 10
-According to the requirements of the front end, the back end has added a new function for returning consumers to inquire about the available date of the parking space that will be placed soon, and the back end will return all the reserved parking spaces of the parking space for consumers to choose.
+Writing a report and preparing for the final presentation.
