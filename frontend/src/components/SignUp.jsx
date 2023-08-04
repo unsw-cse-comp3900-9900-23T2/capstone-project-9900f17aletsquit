@@ -183,7 +183,6 @@ function SignUp () {
           style={styles.textField}
         />
         <TextField
-          required
           id="outlined-required"
           label="Your Friend's Email Address"
           variant="outlined"

@@ -15,6 +15,8 @@ function FindASpot () {
 
   const navigate = useNavigate();
 
+  const distancesUpdatedRef = React.useRef(false);
+
   useEffect(() => {
     fetchCarSpaces();
   }, []);
@@ -167,7 +169,8 @@ function FindASpot () {
 
   useEffect(() => {
     const updateDistances = async () => {
-      if (userLocation) {
+      if (!distancesUpdatedRef.current && userLocation) {
+        distancesUpdatedRef.current = true; // Set the flag to prevent further updates
         const updatedDistances = {};
         for (const carSpace of filteredCarSpaces) {
           const { lat: userLat, lng: userLng } = userLocation;
@@ -210,6 +213,8 @@ function FindASpot () {
     });
   } else if (sortOption === 'price') {
     sortedCarSpaces.sort((a, b) => a.price - b.price);
+  } else if (sortOption === 'rating') {
+    sortedCarSpaces.sort((a, b) => b.totalrank - a.totalrank); // Sort by rating (descending)
   }
 
   return (
@@ -242,6 +247,7 @@ function FindASpot () {
             <Select value={sortOption} onChange={handleSortChange} variant="outlined" size="small">
               <MenuItem value="distance">Distance</MenuItem>
               <MenuItem value="price">Price</MenuItem>
+              <MenuItem value="rating">Rating</MenuItem>
             </Select>
           </Box>
           {/* Car Spaces List */}
