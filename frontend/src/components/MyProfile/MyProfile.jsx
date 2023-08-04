@@ -140,6 +140,7 @@ function MyProfile ({ token }) {
         </Box>
 
         <TextField
+          required
           label="Email"
           variant="outlined"
           type="email"
@@ -151,6 +152,7 @@ function MyProfile ({ token }) {
         />
 
         <TextField
+          required
           label="Password"
           variant="outlined"
           type="password"
@@ -168,6 +170,7 @@ function MyProfile ({ token }) {
           marginBottom={2}
         >
           <TextField
+            required
             label="Name"
             variant="outlined"
             type="text"
@@ -180,6 +183,7 @@ function MyProfile ({ token }) {
           <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
 
           <TextField
+            required
             label="Birthday"
             variant="outlined"
             type="date"

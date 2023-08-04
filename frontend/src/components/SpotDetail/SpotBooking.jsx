@@ -73,10 +73,10 @@ function SpotBooking ({ token }) {
 
   const handleStartDateChange = (event) => {
     const date = event.target.value;
-    if (date < today) {
-      alert('Start date cannot be earlier than the current date.');
-      return;
-    }
+    // if (date < today) {
+    //   alert('Start date cannot be earlier than the current date.');
+    //   return;
+    // }
     setFromTime(date);
   };
 

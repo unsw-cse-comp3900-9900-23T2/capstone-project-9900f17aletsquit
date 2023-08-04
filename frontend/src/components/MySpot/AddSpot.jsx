@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { IconButton, Avatar, Box, MenuItem, Select, InputLabel } from '@mui/material';
@@ -17,56 +17,56 @@ function AddSpot ({ token }) {
 
   const navigate = useNavigate();
 
-  // // Autocomplete state and ref
-  // const [autocomplete, setAutocomplete] = useState(null);
-  // const [mapsAPILoaded, setMapsAPILoaded] = useState(false);
-  // const inputRef = useRef(null);
+  // Autocomplete state and ref
+  const [autocomplete, setAutocomplete] = useState(null);
+  const [mapsAPILoaded, setMapsAPILoaded] = useState(false);
+  const inputRef = useRef(null);
 
-  // // Move the `initializeAutocomplete` function outside the useEffect scope
-  // const initializeAutocomplete = () => {
-  //   console.log(`wocao${inputRef.current}`);
-  //   const autocompleteInstance = new window.google.maps.places.Autocomplete(inputRef.current);
-  //   setAutocomplete(autocompleteInstance);
+  // Move the `initializeAutocomplete` function outside the useEffect scope
+  const initializeAutocomplete = () => {
+    console.log(`wocao${inputRef.current}`);
+    const autocompleteInstance = new window.google.maps.places.Autocomplete(inputRef.current);
+    setAutocomplete(autocompleteInstance);
 
-  //   // Listen to address input changes
-  //   autocompleteInstance.addListener('place_changed', onPlaceChanged);
-  // };
+    // Listen to address input changes
+    autocompleteInstance.addListener('place_changed', onPlaceChanged);
+  };
 
-  // useEffect(() => {
-  //   const loadGoogleMapsAPI = () => {
-  //     return new Promise((resolve) => {
-  //       if (window.google && window.google.maps) {
-  //         resolve();
-  //       } else {
-  //         const script = document.createElement('script');
-  //         script.src =
-  //           'https://maps.googleapis.com/maps/api/js?key=AIzaSyA-iW-2jlSRzjzw5MJxW3z9oeKS-xgPKuQ&libraries=places';
-  //         script.async = true;
-  //         script.defer = true;
-  //         script.onload = resolve;
-  //         document.head.appendChild(script);
-  //       }
-  //     });
-  //   };
+  useEffect(() => {
+    const loadGoogleMapsAPI = () => {
+      return new Promise((resolve) => {
+        if (window.google && window.google.maps) {
+          resolve();
+        } else {
+          const script = document.createElement('script');
+          script.src =
+            'https://maps.googleapis.com/maps/api/js?key=AIzaSyA-iW-2jlSRzjzw5MJxW3z9oeKS-xgPKuQ&libraries=places';
+          script.async = true;
+          script.defer = true;
+          script.onload = resolve;
+          document.head.appendChild(script);
+        }
+      });
+    };
 
-  //   loadGoogleMapsAPI().then(() => {
-  //     setMapsAPILoaded(true);
-  //   });
-  // }, []);
+    loadGoogleMapsAPI().then(() => {
+      setMapsAPILoaded(true);
+    });
+  }, []);
 
-  // useEffect(() => {
-  //   if (mapsAPILoaded && inputRef.current) {
-  //     initializeAutocomplete();
-  //   }
-  // }, [mapsAPILoaded]);
+  useEffect(() => {
+    if (mapsAPILoaded && inputRef.current) {
+      initializeAutocomplete();
+    }
+  }, [mapsAPILoaded]);
 
-  // // Handle selected address
-  // const onPlaceChanged = () => {
-  //   if (autocomplete) {
-  //     const place = autocomplete.getPlace();
-  //     setAddress(place.formatted_address || '');
-  //   }
-  // };
+  // Handle selected address
+  const onPlaceChanged = () => {
+    if (autocomplete) {
+      const place = autocomplete.getPlace();
+      setAddress(place.formatted_address || '');
+    }
+  };
 
   async function addSpot () {
     await fetch('http://127.0.0.1:8800/carspace/add', {
