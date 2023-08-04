@@ -22,19 +22,28 @@ function ViewMyProfile ({ token }) {
   const navigate = useNavigate();
 
   async function getProfile (token) {
-    const response = await fetch('http://127.0.0.1:8800/user/sendProfile', {
-      method: 'GET',
-      headers: {
-        token: token,
-      },
-    });
-    const data = await response.json();
-    setEmail(data.email);
-    setUpassword(data.upassword);
-    setUsername(data.username);
-    setBirthday(data.birthday.split('T')[0]);
-    setUserImage(data.userimage);
-    setWalletExtra(parseFloat(data.walletExtra));
+    try {
+      const response = await fetch('http://127.0.0.1:8800/user/sendProfile', {
+        method: 'GET',
+        headers: {
+          token: token,
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setEmail(data.email);
+        setUpassword(data.upassword);
+        setUsername(data.username);
+        setBirthday(data.birthday?.split('T')[0] || ''); // Use optional chaining
+        setUserImage(data.userimage);
+        setWalletExtra(parseFloat(data.walletExtra));
+      } else {
+        console.error('Failed to fetch profile:', response.status);
+      }
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+    }
   }
 
   // 在组件加载时调用 getProfile 函数以初始化变量的值

@@ -17,6 +17,7 @@ function MyProfile ({ token }) {
   const [previousUpassword, setPreviousUpassword] = useState('');
   const [previousUsername, setPreviousUsername] = useState('');
   const [previousUserimage, setPreviousUserimage] = useState('');
+  const [imageUrl, setImageUrl] = useState(previousUserimage || null);
 
   const navigate = useNavigate();
 
@@ -96,6 +97,7 @@ function MyProfile ({ token }) {
     const file = e.target.files[0];
     fileToDataUrl(file).then((base64Str) => {
       setUserimage(base64Str);
+      setImageUrl(base64Str); // Update the imageUrl when userimage changes
       console.log(`:pspsps${base64Str}`);
     });
   };
@@ -125,9 +127,9 @@ function MyProfile ({ token }) {
               style={{ display: 'none' }}
             />
             <IconButton component="span">
-              {previousUserimage
-                ? (
-                  <Avatar src={previousUserimage} />
+              {imageUrl
+                ? ( // Use imageUrl instead of previousUserimage
+                  <Avatar src={imageUrl} />
                 )
                 : (
                   <AccountCircleIcon fontSize="large" />
