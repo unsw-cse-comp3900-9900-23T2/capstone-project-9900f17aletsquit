@@ -9,6 +9,11 @@ import com.unsw.back_end.pojo.Commentofcarspace;
 import com.unsw.back_end.pojo.Order;
 import com.unsw.back_end.pojo.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -27,6 +32,10 @@ public class OrderServiceImp implements OrderService {
     UserMapper userMapper;
     @Autowired
     CommentofcarspaceMapper commentofcarspaceMapper;
+
+    @Autowired
+    private CacheManager cacheManager;
+
     @Override
     public LinkedList<Order> orderSearch(Integer customerId) {
         LinkedList<Order> orders = orderMapper.orderSearch(customerId);
@@ -63,8 +72,15 @@ public class OrderServiceImp implements OrderService {
                 invitedUser.setWalletExtra(invitedUser.getWalletExtra()+5);
                 userMapper.updateByPrimaryKeySelective(invitedUser);
                 userMapper.updateByPrimaryKeySelective(user);
+
+                Cache userCache = cacheManager.getCache("UserCache");
+                userCache.put(order.getCustomerId(), user);
+                userCache.put(order.getProviderId(), invitedUser);
             }
         }
+        Cache userCache = cacheManager.getCache("UserCache");
+        userCache.put(order.getCustomerId(), customer);
+        userCache.put(order.getProviderId(), provider);
         return i;
     }
 
@@ -119,6 +135,9 @@ public class OrderServiceImp implements OrderService {
             userMapper.updateByPrimaryKeySelective(customer);
             userMapper.updateByPrimaryKeySelective(provider);
             orderMapper.deleteByPrimaryKey(orderId);
+            Cache userCache = cacheManager.getCache("UserCache");
+            userCache.put(customer.getUserId(), customer);
+            userCache.put(provider.getUserId(), provider);
             return 1;
         }
 
