@@ -59,7 +59,7 @@ function AdminSignIn ({ onSuccess }) {
       if (response.ok) {
         onSuccess(data.token);
         console.log(`token:${data.token}`);
-        navigate('/dashboard');
+        navigate('/findaspot');
       } else {
         setError(data.message);
       }
